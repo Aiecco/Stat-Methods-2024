@@ -5,4 +5,6 @@
 
 ## Candidate DATASETS
 
-        https://www.kaggle.com/datasets/marshald/london-boroughs
+        https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data
+## code
+         https://www.kaggle.com/code/erikbruin/house-prices-lasso-xgboost-and-a-detailed-eda/input
