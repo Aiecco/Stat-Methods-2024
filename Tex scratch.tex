@@ -1,0 +1,113 @@
+\documentclass[a4paper, 12pt]{article}
+
+% Packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{lipsum}
+
+% Page Setup
+\geometry{margin=1in}
+
+% Title Setup
+\title{Applying High-Dimensional Techniques to Data: A Comprehensive Analysis}
+\author{Alessandro Pala, Domenico Tremaggi}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\noindent
+This document provides an in-depth exploration of high-dimensional techniques applied to data using Generalized Linear Models (GLMs) and advanced regularization techniques. Key areas include data understanding, regularization methods, and model selection strategies.
+\end{abstract}
+
+\section*{Introduction}
+\noindent
+In this study, we aim to apply high-dimensional techniques for inference on a structured dataset. The focus will be on exploring the dataset, applying regularization, and understanding model behavior under various conditions. Specific attention will be given to Group Lasso and its applications in grouped data settings.  \\
+For this paper we choose a large dataset containing more than 21000 observation on houses pricing. Along with a column full of prices, the dataset provides other variables that are usually connected with the value of a house, most of them are numerical, some of them are binary. Leaving out the ID and the date related to every house, witch will not be useful in our experiment, we have:
+\begin{itemize}
+\item \textbf{Price}: Property price
+\item \textbf{Bedrooms}: Number of bedrooms
+\item \textbf{Bathrooms}: Number of bathrooms
+\item \textbf{sqft living}: Living area size in square feet
+\item \textbf{sqft lot}: Total lot size in square feet
+\item \textbf{floors}: Number of floors
+\item \textbf{watefront}: Indicates if property has waterfront view(0/1)
+\item \textbf{view}: Quality level of property view(0 to 5)
+\item \textbf{condition}: Overall condition rating(0 to 5)
+\item \textbf{grade}: Overall grade rating(1 to 13)
+\item \textbf{sqft above}: Living area above ground level in square feet
+\item \textbf{sqft basement}: Basement area in square feet
+\item \textbf{yr built}: Year in witch property was built 
+\item \textbf{yr renovated}: Year property was last renovated
+\item \textbf{zipcode}: Property location zipcode
+\item \textbf{lat}: Latitude coordinate of property location
+\item \textbf{long}: Longiude coordinate of property location
+\item \textbf{sqft living15}: Living area of 15 nearest properties on square feet
+\item \textbf{sqft lot15}: Lot size of 15 nearest properties on square feet
+\end{itemize}
+The number of features and the way they could be interconnected make this dataset particularly useful for our purposes. Indeed, we will try to figure out how many of these variables are significant to build a good prediction model. 
+\section{Exploratory Data Analysis}
+\noindent
+Exploratory Data Analysis (EDA) is a critical step to understand data distributions, detect anomalies, and identify patterns. This section includes:
+\begin{itemize}
+    \item Summary statistics of the dataset.
+    \item Visualizations: histograms, scatter plots, and correlation heatmaps.
+    \item Insights into the relationship between features and target variables.
+\end{itemize}
+
+\section{Basic Regularization and Basic Regression Models}
+\noindent
+This section introduces the fundamentals of regression techniques with a focus on:
+\begin{itemize}
+    \item Linear Regression.
+    \item Multivariate and Polynomial Regression.
+    \item Lasso and Elastic Net
+\end{itemize}
+
+\section{Group Lasso}
+\noindent
+
+\subsection{The Group Lasso}
+Group Lasso is an extension of the classical Lasso (Least Absolute Shrinkage and Selection Operator) method for regularization and variable selection, specifically designed to handle grouped variables. It is particularly useful when variables are naturally organized into predefined groups, and we want to select or discard entire groups of variables simultaneously rather than individual variables.\\
+The primary objective of Group Lasso is to perform regression while penalizing the sum of the norms of the coefficients within each group. This encourages sparsity at the group level, meaning that either all coefficients within a group are shrunk toward zero, or none are, leading to the selection or exclusion of entire groups of variables.
+\subsubsection{Mathematical Formulation}
+Given a linear regression problem, the model can be expressed as:
+\begin{equation}
+y=X\beta + \epsilon
+\end{equation}
+where: $y$ is the $n \times 1$ vector of observed responses, $X$ is the $n \times p$ matrix of predictors, $\beta$ is the $p \times 1$ vector of regression coefficient and $\epsilon$ is the error term, assumed to be normally distributed.\\
+In standard linear regression, we aim to minimize the least squares error:
+\begin{equation}
+\min_{\beta}\left (\frac{1}{2n}\lVert y-X\beta\rVert^{2}_{2} \right)
+\end{equation}
+In the case of Group Lasso, we modify the objective function by adding a regularization term that penalizes the coefficients based on groups. If the variables are divided into $G$ groups, and group $g$ contains $p_{g}$ variables, the Group Lasso penalty is:
+\begin{equation}
+\lambda \sum_{g=1}^{G}\lVert \beta_{g} \rVert_{2}
+\end{equation}
+where: $\beta_g$ represent the coefficient corresponding to the $g$-th group of variables, $\lVert \beta_g \rVert_2$ is the euclidean norm of the coefficient vector, $\lambda$ is a regularization parameter that controls the strenght of the penalty.\\
+Thus, the optimization problem becomes:
+\begin{equation}
+\min_{\beta}\left (\frac{1}{2n}\lVert y-X\beta\rVert^{2}_{2} + \lambda \sum_{g=1}^{G}\lVert \beta_{g} \rVert_{2}\right)
+\end{equation}
+\subsection{Experiments}
+
+\section{Model Selection}
+\noindent
+Selecting the best model involves balancing complexity and accuracy. This section will cover:
+\begin{itemize}
+    \item Cross-validation techniques.
+    \item Information criteria: AIC, BIC.
+\end{itemize}
+
+\section{Conclusion}
+\noindent
+
+% Bibliography Section (if needed)
+% \bibliographystyle{plain}
+% \bibliography{references}
+
+\end{document}
