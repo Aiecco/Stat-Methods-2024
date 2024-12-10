@@ -163,8 +163,23 @@ We want to plot the correlations higher than 0.75 (to fix)
 
 # Basic models
 
-        Lorem Ipsum
+#### First of all, we create a local separate dataset 'X' devoid of the new aggregated variables, the price and of the original date column. Then we scale it.
+        X <- data[,3:20]
+        X=as.matrix(X)
+    
+        X <- scale(X)
 
+#### We create a local dataset Y to store the prices and use as true preds.
+        Y <- data[,2]
+        
+
+### We try regressions.....
+        grp <- c(rep(1, 7),  # Physical Characteristics
+         rep(2, 2),  # Aesthetic and View Features
+         rep(3, 2),  # Property Condition and Grade
+         rep(4, 3),  # Temporal Aspects
+         rep(5, 3),  # Neighborhood Context
+         rep(6, 2))  # Geographic Location
 
 # Group Lasso
 
@@ -172,78 +187,32 @@ We try group Lasso with two different sets of groups.
 
 ### 1. How real estate professionals evaluate property value
 
-    Physical Characteristics of the Property:
-    
-        Living area size in square feet
-        Total lot size in square feet
-        Living area above ground level in square feet
-        Basement area in square feet
-        Number of bedrooms
-        Number of bathrooms
-        Number of floors
-    
-    Aesthetic and View Features:
-    
-        Indicates if property has waterfront view
-        Quality level of property view
-    
-    Property Condition and Grade:
-    
-        Overall condition rating
-        Overall grade rating
-    
-    Temporal Aspects:
-    
-        Year property was built
-        Year property was last renovated
-        Date of property listing
-    
-    Neighborhood Context:
-    
-        Living area size of 15 nearest properties in square feet
-        Lot size of 15 nearest properties in square feet
-        Property location zip code
-    
-    Geographic Location:
-    
-        Latitude coordinate of property location
-        Longitude coordinate of property location
+Physical characteristics include the living area size, lot size, above-ground and basement areas, number of bedrooms, bathrooms, and floors. Aesthetic and view features detail whether the property has a waterfront view and the quality of its overall view. Condition and grade focus on the property's overall condition and grade ratings. Temporal aspects provide information on the year the property was built, last renovated, and its listing date. Neighborhood context includes the average living area and lot size of the 15 nearest properties and the property’s zip code. Finally, the geographic location is specified by its latitude and longitude coordinates.
 
 ### 2 Variables expected to be highly correlated.
 
-    House Size Metrics (Highly Correlated Features):
+House size metrics capture highly correlated attributes such as the living area size (total, above ground, and basement) and the average size of nearby properties. Lot size metrics include total lot area and that of the 15 nearest properties. Aesthetic and condition features assess property appeal, such as waterfront views, quality and condition ratings, and overall grade. Temporal factors track the property's age, renovation history, and listing date. Geographic features provide location information, including zip code, latitude, and longitude. Lastly, core amenities detail the number of bedrooms, bathrooms, and floors.
+
+## gglasso code
+
+    library(gglasso)
+
+    groupset_1 <- c(
+      rep(1, 7),  # Group 1: Physical Characteristics
+      rep(2, 2),  # Group 2: Aesthetic and View Features
+      rep(3, 2),  # Group 3: Property Condition and Grade
+      rep(4, 3),  # Group 4: Temporal Aspects
+      rep(5, 3),  # Group 5: Neighborhood Context
+      rep(6, 2)   # Group 6: Geographic Location)
     
-        Living area size in square feet
-        Living area above ground level in square feet
-        Basement area in square feet
-        Living area size of 15 nearest properties in square feet
-    
-    Lot Size Metrics:
-    
-        Total lot size in square feet
-        Lot size of 15 nearest properties in square feet
-    
-    Aesthetic and Condition Features:
-    
-        Indicates if property has waterfront view
-        Quality level of property view
-        Overall condition rating
-        Overall grade rating
-    
-    Temporal Factors:
-    
-        Year property was built
-        Year property was last renovated
-        Date of property listing
-    
-    Geographic Features:
-    
-        Property location zip code
-        Latitude coordinate of property location
-        Longitude coordinate of property location
-    
-    Core Amenities:
-    
-        Number of bedrooms
-        Number of bathrooms
-        Number of floors
+    groupset_2 <- c(
+      rep(1, 4), # House Size Metrics
+      rep(2, 2), # Lot Size Metrics
+      rep(3, 4), # Aesthetic and Condition Features
+      rep(4, 3), # Temporal Factors
+      rep(5, 3), # Geographic Features
+      rep(6, 3)  # Core Amenities)
+
+    fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
+    fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
+      
