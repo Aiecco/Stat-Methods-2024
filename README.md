@@ -127,7 +127,7 @@ We also do a basic correlation analysis
         plot_correlation_matrix(cor_matrix_cool, "Correlation Matrix for Cool Variables")
 
 
-We want to plot the correlations higher than 0.75
+We want to plot the correlations higher than 0.75 (to fix)
 
         plot_filtered_correlation_matrix <- function(cor_matrix, threshold, title) {
           filtered_matrix <- ifelse(abs(cor_matrix) > threshold, cor_matrix, NA)
@@ -161,3 +161,89 @@ We want to plot the correlations higher than 0.75
         plot_filtered_correlation_matrix(cor_matrix_full, 0.75, "Filtered Correlation Matrix (|r| > 0.75)")
 
 
+# Basic models
+
+        Lorem Ipsum
+
+
+# Group Lasso
+
+We try group Lasso with two different sets of groups.
+
+### 1. How real estate professionals evaluate property value
+
+    Physical Characteristics of the Property:
+    
+        Living area size in square feet
+        Total lot size in square feet
+        Living area above ground level in square feet
+        Basement area in square feet
+        Number of bedrooms
+        Number of bathrooms
+        Number of floors
+    
+    Aesthetic and View Features:
+    
+        Indicates if property has waterfront view
+        Quality level of property view
+    
+    Property Condition and Grade:
+    
+        Overall condition rating
+        Overall grade rating
+    
+    Temporal Aspects:
+    
+        Year property was built
+        Year property was last renovated
+        Date of property listing
+    
+    Neighborhood Context:
+    
+        Living area size of 15 nearest properties in square feet
+        Lot size of 15 nearest properties in square feet
+        Property location zip code
+    
+    Geographic Location:
+    
+        Latitude coordinate of property location
+        Longitude coordinate of property location
+
+### 2 Variables expected to be highly correlated.
+
+    House Size Metrics (Highly Correlated Features):
+    
+        Living area size in square feet
+        Living area above ground level in square feet
+        Basement area in square feet
+        Living area size of 15 nearest properties in square feet
+    
+    Lot Size Metrics:
+    
+        Total lot size in square feet
+        Lot size of 15 nearest properties in square feet
+    
+    Aesthetic and Condition Features:
+    
+        Indicates if property has waterfront view
+        Quality level of property view
+        Overall condition rating
+        Overall grade rating
+    
+    Temporal Factors:
+    
+        Year property was built
+        Year property was last renovated
+        Date of property listing
+    
+    Geographic Features:
+    
+        Property location zip code
+        Latitude coordinate of property location
+        Longitude coordinate of property location
+    
+    Core Amenities:
+    
+        Number of bedrooms
+        Number of bathrooms
+        Number of floors
