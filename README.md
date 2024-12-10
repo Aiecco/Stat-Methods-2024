@@ -40,4 +40,45 @@ We clean the ID and convert the year-built of the house into its age.
     data <- data[-c(1)]
     data <- data[-c(15)]
 
-    data$number_of_rooms <- data$bedrooms + data$bathrooms
+# EDA
+
+We aggregate some variables to check likely correlations as to apply high dim techniques later on
+
+        data$total_sqft <- data$sqft_living + data$sqft_basement
+        data$sqft_diff_15 <- data$sqft_living - data$sqft_living15
+        data$bath_per_bed <- ifelse(data$bedrooms > 0, data$bathrooms / data$bedrooms, 0)
+        data$age_since_reno <- ifelse(data$yr_built > 0, 2024 - data$yr_built, 0)
+
+We plot them
+
+
+    plot(data$total_sqft, data$price, # Property Price vs. Total Area
+         main = "Property Price vs Total Area",
+         xlab = "Total Area (sqft)", 
+         ylab = "Price",
+         col = "blue", 
+         pch = 16)
+         
+    boxplot(data$price ~ data$bedrooms, # Price Distribution by Number of Bedrooms
+            main = "Price Distribution by Bedrooms",
+            xlab = "Number of Bedrooms",
+            ylab = "Price",
+            col = "lightgreen")
+            
+    plot(data$sqft_diff_15, data$price, # Living Area Difference (Current vs. Nearest Neighbors)
+         main = "Price vs Living Area Difference",
+         xlab = "Living Area Difference (Current vs Neighbors)",
+         ylab = "Price",
+         col = "darkred", 
+         pch = 16)
+         
+    hist(data$bath_per_bed, # Bathrooms per Bedroom
+         main = "Histogram of Bathrooms per Bedroom",
+         xlab = "Bathrooms per Bedroom",
+         ylab = "Frequency",
+         col = "skyblue",
+         breaks = 10)
+
+We also do a basic correlation analysis
+
+        cor(data[, c("price", "sqft_living", "total_sqft", "bedrooms", "bathrooms", "sqft_lot")])
