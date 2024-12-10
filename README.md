@@ -173,14 +173,6 @@ We want to plot the correlations higher than 0.75 (to fix)
         Y <- data[,2]
         
 
-### We try regressions.....
-        grp <- c(rep(1, 7),  # Physical Characteristics
-         rep(2, 2),  # Aesthetic and View Features
-         rep(3, 2),  # Property Condition and Grade
-         rep(4, 3),  # Temporal Aspects
-         rep(5, 3),  # Neighborhood Context
-         rep(6, 2))  # Geographic Location
-
 # Group Lasso
 
 We try group Lasso with two different sets of groups.
