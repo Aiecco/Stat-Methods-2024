@@ -96,4 +96,68 @@ We plot them
 
 We also do a basic correlation analysis
 
+        plot_correlation_matrix <- function(cor_matrix, title) {
+          n <- nrow(cor_matrix)
+          par(mar = c(4, 4, 4, 2)) # Adjust margins
+          image(1:n, 1:n, t(cor_matrix[n:1, ]), 
+                col = colorRampPalette(c("blue", "white", "red"))(20), 
+                axes = FALSE, 
+                main = title)
+          
+          axis(1, at = 1:n, labels = colnames(cor_matrix), las = 2, cex.axis = 0.8)
+          axis(2, at = 1:n, labels = rev(rownames(cor_matrix)), las = 2, cex.axis = 0.8)
+          
+          for (i in 1:n) {
+            for (j in 1:n) {
+              text(i, n - j + 1, 
+                   labels = round(cor_matrix[i, j], 2), 
+                   cex = 0.8, 
+                   col = ifelse(abs(cor_matrix[i, j]) > 0.5, "white", "black"))
+            }
+          }
+        }
+        
+        cor_matrix_full <- cor(data[, sapply(data, is.numeric)])
+        
+        plot_correlation_matrix(cor_matrix_full, "Full Correlation Matrix")
+        
+        cool_vars <- c("price", "total_sqft", "age_since_reno", "total_rooms", "bath_per_bed", "sqft_diff_15")
+        cor_matrix_cool <- cor(data[, cool_vars])
+        
+        plot_correlation_matrix(cor_matrix_cool, "Correlation Matrix for Cool Variables")
+
+
+We want to plot the correlations higher than 0.75
+
+        plot_filtered_correlation_matrix <- function(cor_matrix, threshold, title) {
+          filtered_matrix <- ifelse(abs(cor_matrix) > threshold, cor_matrix, NA)
+          
+          par(mar = c(5, 5, 4, 4)) # Large margins to avoid errors
+          
+          # Set up the plot area
+          n <- nrow(cor_matrix)
+          image(1:n, 1:n, t(filtered_matrix[n:1, ]), 
+                col = colorRampPalette(c("blue", "white", "red"))(20), 
+                axes = FALSE, 
+                main = title)
+          
+          axis(1, at = 1:n, labels = colnames(cor_matrix), las = 2, cex.axis = 0.8)
+          axis(2, at = 1:n, labels = rev(rownames(cor_matrix)), las = 2, cex.axis = 0.8)
+          
+          for (i in 1:n) {
+            for (j in 1:n) {
+              if (!is.na(filtered_matrix[i, j])) {
+                text(i, n - j + 1, 
+                     labels = round(filtered_matrix[i, j], 2), 
+                     cex = 0.8, 
+                     col = ifelse(abs(filtered_matrix[i, j]) > 0.5, "white", "black"))
+              }
+            }
+          }
+        }
+        
+        cor_matrix_full <- cor(data[, sapply(data, is.numeric)])
+        
+        plot_filtered_correlation_matrix(cor_matrix_full, 0.75, "Filtered Correlation Matrix (|r| > 0.75)")
+
 
