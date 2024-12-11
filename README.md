@@ -29,7 +29,7 @@
 
 # Preprocess/clean
 
-We clean the ID and convert the year-built of the house into its age.
+We clean the ID and convert the year-built of the house into its age. We also scale the data.
 
     data$date <- as.Date(substr(data$date, 1, 8), format = "%Y%m%d")
     data$yr_renovated[data$yr_renovated == 0] <- NA
@@ -37,15 +37,19 @@ We clean the ID and convert the year-built of the house into its age.
     current_year <- as.numeric(format(Sys.Date(), "%Y"))
     data$age <- ifelse(is.na(data$yr_renovated), current_year - data$yr_built, current_year - data$yr_renovated)
 
-    data <- data[-c(1)]
-    data <- data[-c(15)]
+    data <- data[-c(1, 15, 16)]
+
+    data <- scale(data)
 
 We create the data matrix X with only the price and the original (cleaned) features to use for gglasso.
 
-        X <- data[,2:20]
-        X=as.matrix(X)
+        X <- data[,3:19]
+        X = as.matrix(X)
     
         X <- scale(X)
+
+        Y <- data[,2]
+        
 
 # EDA
 
