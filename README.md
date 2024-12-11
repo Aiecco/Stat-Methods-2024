@@ -124,11 +124,78 @@ We also do a basic correlation analysis
                        waterfront + view + condition + grade + sqft_above + sqft_basement +
                        zipcode + lat + long + sqft_living15 + sqft_lot15 + age, data = data)
         
-### multivariate poisson reg (lasso)
+### multivariate poisson reg (elastic net)
     train_glm <- data[, 2:18]
+    test_glm <- data$price
     MGLM <- glmnet(
-    train_glm, data$price, standardize=FALSE, family="poisson")
+    train_glm, test_glm, standardize=FALSE, family="poisson", alpha=0.1)
 
+    train_glm <- as.matrix(train_glm)  # needed for cv
+    MGLM.cv <- cv.glmnet(train_glm, test_glm, nfolds=1000)
+
+    opt.lam.MGLM <- c(MGLM.cv$lambda.1se)
+    MGLM.coefs <- coef(MGLM.cv, s = opt.lam.MGLM)
+
+Result:
+
+        ****MGLM.coefs
+        (Intercept)   540529.7
+        bedrooms      356970.6
+        bathrooms          .  
+        sqft_living        .  
+        sqft_lot           .  
+        floors             .  
+        waterfront         .  
+        view               .  
+        condition          .  
+        grade              .  
+        sqft_above         .  
+        sqft_basement      .  
+        zipcode            .  
+        lat                .  
+        long               .  
+        sqft_living15      .  
+        sqft_lot15         .  
+        age                .  
+
+
+
+
+### multivariate poisson reg with structural vars (elastic net)
+    train_struc <- data
+    test_struc <- data$price
+    STRUC <- glmnet(
+    train_struc, test_struc, standardize=FALSE, family="poisson", alpha=0.1)
+
+    train_struc <- as.matrix(train_struc)  # needed for cv
+    STRUC.cv <- cv.glmnet(train_struc, test_struc, nfolds=1000)
+
+    opt.lam.STRUC <- c(STRUC.cv$lambda.1se)
+    STRUC.coefs <- coef(STRUC.cv, s = opt.lam.STRUC)
+
+Result:
+
+    ***STRUC.coefs
+    (Intercept)   1.575673e+04
+    price         9.708495e-01
+    bedrooms      2.231746e-07
+    bathrooms     .           
+    sqft_living   .           
+    sqft_lot      .           
+    floors        .           
+    waterfront    .           
+    view          .           
+    condition     .           
+    grade         .           
+    sqft_above    .           
+    sqft_basement .           
+    zipcode       .           
+    lat           .           
+    long          .           
+    sqft_living15 .           
+    sqft_lot15    .           
+    age           . 
+    
 # Group Lasso
 
 We try group Lasso with two different sets of groups.
