@@ -109,13 +109,11 @@ We also do a basic correlation analysis
 # Basic models
 
 #### First of all, we create a local separate dataset 'X' devoid of the new aggregated variables, the price and of the original date column. Then we scale it.
-        X <- data[,3:20]
+        X <- data[,2:20]
         X=as.matrix(X)
     
         X <- scale(X)
 
-#### We create a local dataset Y to store the prices and use as true preds.
-        Y <- data[,2]
         
 
 # Group Lasso
