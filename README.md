@@ -245,14 +245,7 @@ House size metrics capture highly correlated attributes such as the living area 
 
     library(gglasso)
 
-    groupset_1 <- c(
-      rep(1, 6),  # Group 1: Physical Characteristics
-      rep(5, 2),  # Group 2: Aesthetic and View Features
-      rep(7, 2),  # Group 3: Property Condition and Grade
-      16,         # Group 4: Age
-      11,         # Group 5: Neighborhood Context
-      rep(12, 4)   # Group 6: Geographic Location
-    )
+    groupset_1 <- c(1,1,1,1,1,1,2,2,3,3,1,5,6,6,5,5,4)
     
     groupset_2 <- c(
       rep(1, 4), # House Size Metrics
