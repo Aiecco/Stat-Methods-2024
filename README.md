@@ -98,73 +98,14 @@ We plot them
 
 We also do a basic correlation analysis
         
-        par(mfrow=(1,1))
-        
-        plot_correlation_matrix <- function(cor_matrix, title) {
-          n <- nrow(cor_matrix)
-          par(mar = c(4, 4, 4, 2)) # Adjust margins
-          image(1:n, 1:n, t(cor_matrix[n:1, ]), 
-                col = colorRampPalette(c("blue", "white", "red"))(20), 
-                axes = FALSE, 
-                main = title)
-          
-          axis(1, at = 1:n, labels = colnames(cor_matrix), las = 2, cex.axis = 0.8)
-          axis(2, at = 1:n, labels = rev(rownames(cor_matrix)), las = 2, cex.axis = 0.8)
-          
-          for (i in 1:n) {
-            for (j in 1:n) {
-              text(i, n - j + 1, 
-                   labels = round(cor_matrix[i, j], 2), 
-                   cex = 0.8, 
-                   col = ifelse(abs(cor_matrix[i, j]) > 0.5, "white", "black"))
-            }
-          }
-        }
-        
-        cor_matrix_full <- cor(data[, sapply(data, is.numeric)])
-        
-        plot_correlation_matrix(cor_matrix_full, "Full Correlation Matrix")
-        
-        cool_vars <- c("price", "total_sqft", "age_since_reno", "total_rooms", "bath_per_bed", "sqft_diff_15")
-        cor_matrix_cool <- cor(data[, cool_vars])
-        
-        plot_correlation_matrix(cor_matrix_cool, "Correlation Matrix for Cool Variables")
+        library(ggcorrplot)
+        correlation_matrix <- cor(data[, sapply(data, is.numeric)])
+        ggcorrplot(correlation_matrix, 
+                   method = "square", 
+                   lab = TRUE, 
+                   lab_size = 3)
 
-
-We want to plot the correlations higher than 0.75 (to fix)
-
-        plot_filtered_correlation_matrix <- function(cor_matrix, threshold, title) {
-          filtered_matrix <- ifelse(abs(cor_matrix) > threshold, cor_matrix, NA)
-          
-          par(mar = c(5, 5, 4, 4)) # Large margins to avoid errors
-          
-          # Set up the plot area
-          n <- nrow(cor_matrix)
-          image(1:n, 1:n, t(filtered_matrix[n:1, ]), 
-                col = colorRampPalette(c("blue", "white", "red"))(20), 
-                axes = FALSE, 
-                main = title)
-          
-          axis(1, at = 1:n, labels = colnames(cor_matrix), las = 2, cex.axis = 0.8)
-          axis(2, at = 1:n, labels = rev(rownames(cor_matrix)), las = 2, cex.axis = 0.8)
-          
-          for (i in 1:n) {
-            for (j in 1:n) {
-              if (!is.na(filtered_matrix[i, j])) {
-                text(i, n - j + 1, 
-                     labels = round(filtered_matrix[i, j], 2), 
-                     cex = 0.8, 
-                     col = ifelse(abs(filtered_matrix[i, j]) > 0.5, "white", "black"))
-              }
-            }
-          }
-        }
-        
-        cor_matrix_full <- cor(data[, sapply(data, is.numeric)])
-        
-        plot_filtered_correlation_matrix(cor_matrix_full, 0.75, "Filtered Correlation Matrix (|r| > 0.75)")
-
-
+                   
 # Basic models
 
 #### First of all, we create a local separate dataset 'X' devoid of the new aggregated variables, the price and of the original date column. Then we scale it.
@@ -211,4 +152,26 @@ House size metrics capture highly correlated attributes such as the living area 
 
     fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
     fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
-      
+
+    coef.mat.1=fit$beta
+    coef.mat.2=fit$beta
+
+
+    par(mfrow=c(1,2))
+    fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=10, lambda.factor=0.0001)
+    plot(fit.cv.1)
+    
+    fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=10, lambda.factor=0.0001)
+    plot(fit.cv.1)
+
+
+
+    # lambda choice
+    fit.1.lambda <- gglasso(x=X, y=Y, group=groupset_1, loss='ls',lambda.factor=0.0001)
+    lambda_0_1 <- fit.1.lambda$lambda.1se
+    lambda_1_1 <- fit.1.lambda$lambda.min
+
+    fit.2.lambda <- gglasso(x=X, y=Y, group=groupset_2, loss='ls',lambda.factor=0.0001)
+    lambda_0_2 <- fit.2.lambda$lambda.1se
+    lambda_1_2 <- fit.2.lambda$lambda.min
+    
