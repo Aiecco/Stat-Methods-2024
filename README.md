@@ -53,7 +53,7 @@ We aggregate some variables to check likely correlations as to apply high dim te
 
 We plot them
 
-        par(mfrow=(2,3))
+        par(mfrow=c(2,2))
         # Visualization: Price vs Total Area
         plot(data$total_sqft, data$price,
              main = "Property Price vs Total Area",
@@ -63,16 +63,6 @@ We plot them
              pch = 1,  # smaller points
              cex = 0.5)  # reduce point size
         abline(lm(price ~ total_sqft, data = data), col = "black")
-        
-        # Visualization: Price vs Age
-        plot(data$age_since_reno, data$price,
-             main = "Property Price vs Age",
-             xlab = "Age of Property (years since built or renovated)",
-             ylab = "Price",
-             col = "green",
-             pch = 1,  # smaller points
-             cex = 0.5)  # reduce point size
-        abline(lm(price ~ age_since_reno, data = data), col = "black")
         
         # Visualization: Price vs Total Number of Rooms
         plot(data$total_rooms, data$price,
