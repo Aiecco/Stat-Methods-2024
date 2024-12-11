@@ -1,6 +1,11 @@
 # Stat-Methods-2024
 
-    High dimensional methods for regression and its regularization
+TO DO:
+- descrizione matematica reg lineare, reg poisson
+- descrizione risultati reg lineare, reg poisson, reg poisson strutturale, primo group lasso
+- modificare formule group lasso come nelle slides
+
+
 
 # Dataset
         https://www.kaggle.com/datasets/sukhmandeepsinghbrar/housing-price-dataset/data
@@ -226,14 +231,6 @@ House size metrics capture highly correlated attributes such as the living area 
     library(gglasso)
 
     groupset_1 <- c(1,1,1,1,1,1,2,2,3,3,1,5,6,6,5,5,4)
-    
-    groupset_2 <- c(
-      rep(1, 4), # House Size Metrics
-      rep(2, 2), # Lot Size Metrics
-      rep(3, 4), # Aesthetic and Condition Features
-      rep(4, 3), # Temporal Factors
-      rep(5, 3), # Geographic Features
-      rep(6, 3)  # Core Amenities)
 
     fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
     fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
