@@ -119,8 +119,15 @@ We also do a basic correlation analysis
 # Basic models
 
 
-
+### multivariate linear reg
+                MLR <- lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors +
+                       waterfront + view + condition + grade + sqft_above + sqft_basement +
+                       zipcode + lat + long + sqft_living15 + sqft_lot15 + age, data = data)
         
+### multivariate poisson reg (lasso)
+    train_glm <- data[, 2:18]
+    MGLM <- glmnet(
+    train_glm, data$price, standardize=FALSE, family="poisson")
 
 # Group Lasso
 
@@ -128,7 +135,7 @@ We try group Lasso with two different sets of groups.
 
 ### 1. How real estate professionals evaluate property value
 
-Physical characteristics include the living area size, lot size, above-ground and basement areas, number of bedrooms, bathrooms, and floors. Aesthetic and view features detail whether the property has a waterfront view and the quality of its overall view. Condition and grade focus on the property's overall condition and grade ratings. Temporal aspects provide information on the year the property was built, last renovated, and its listing date. Neighborhood context includes the average living area and lot size of the 15 nearest properties and the property’s zip code. Finally, the geographic location is specified by its latitude and longitude coordinates.
+Physical characteristics include the living area size, lot size, above-ground and basement areas, number of bedrooms, bathrooms, and floors. Aesthetic and view features detail whether the property has a waterfront view and the quality of its overall view. Condition and grade focus on the property's overall condition and grade ratings. Temporal aspects provide information on the year the property was built, and its age. Neighborhood context includes the average living area and lot size of the 15 nearest properties and the property’s zip code. Finally, the geographic location is specified by its latitude and longitude coordinates.
 
 ### 2 Variables expected to be highly correlated.
 
