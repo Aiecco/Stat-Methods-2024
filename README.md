@@ -44,7 +44,7 @@ We clean the ID and convert the year-built of the house into its age. We also sc
     
 We create the data matrix X with only the original (cleaned) features to use for gglasso. Y is the true price.
 
-    X <- data[,3:18]
+    X <- data[,2:18]
     X = as.matrix(X)
         
     Y <- data[,1]
@@ -246,12 +246,13 @@ House size metrics capture highly correlated attributes such as the living area 
     library(gglasso)
 
     groupset_1 <- c(
-      rep(1, 7),  # Group 1: Physical Characteristics
-      rep(2, 2),  # Group 2: Aesthetic and View Features
-      rep(3, 2),  # Group 3: Property Condition and Grade
-      rep(4, 3),  # Group 4: Temporal Aspects
-      rep(5, 3),  # Group 5: Neighborhood Context
-      rep(6, 2)   # Group 6: Geographic Location)
+      rep(1, 6),  # Group 1: Physical Characteristics
+      rep(5, 2),  # Group 2: Aesthetic and View Features
+      rep(7, 2),  # Group 3: Property Condition and Grade
+      16,         # Group 4: Age
+      11,         # Group 5: Neighborhood Context
+      rep(12, 4)   # Group 6: Geographic Location
+    )
     
     groupset_2 <- c(
       rep(1, 4), # House Size Metrics
