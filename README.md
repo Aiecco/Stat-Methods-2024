@@ -58,7 +58,6 @@ We aggregate some variables to check likely correlations as to apply high dim te
         data$bath_per_bed <- ifelse(data$bedrooms > 0, data$bathrooms / data$bedrooms, 0) # Bathroom to bedroom ratio
         data$total_rooms <- data$bedrooms + data$bathrooms # Total number of rooms
         data$sqft_diff_15 <- data$sqft_living - data$sqft_living15 # Difference in living area from nearest neighbors
-        data$age_since_reno <- ifelse(data$yr_built > 0, 2024 - data$yr_built, 0) # Age of the property
 
 
 We plot them
