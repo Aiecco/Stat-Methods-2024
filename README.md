@@ -194,7 +194,7 @@ Result:
 
 
 ### multivariate poisson reg with structural vars (elastic net)
-    train_struc <- data
+    train_struc <- data[, 2:18]
     test_struc <- data$price
     STRUC <- glmnet(
     train_struc, test_struc, standardize=FALSE, family="poisson", alpha=0.1)
