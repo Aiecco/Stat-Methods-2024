@@ -123,7 +123,40 @@ We also do a basic correlation analysis
                 MLR <- lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors +
                        waterfront + view + condition + grade + sqft_above + sqft_basement +
                        zipcode + lat + long + sqft_living15 + sqft_lot15 + age, data = data)
+
+Results:
+
+        Residuals:
+              Min        1Q    Median        3Q       Max 
+        -7.36e-07 -3.00e-11  6.00e-11  1.50e-10  1.38e-09 
         
+        Coefficients: (1 not defined because of singularities)
+                        Estimate Std. Error    t value Pr(>|t|)    
+        (Intercept)    5.405e+05  4.201e-11  1.287e+16   <2e-16 ***
+        bedrooms       3.677e+05  7.398e-11  4.970e+15   <2e-16 ***
+        bathrooms      7.485e-11  5.423e-11  1.380e+00    0.168    
+        sqft_living    3.946e-11  7.260e-11  5.440e-01    0.587    
+        sqft_lot      -1.557e-10  1.267e-10 -1.229e+00    0.219    
+        floors         7.671e-12  6.084e-11  1.260e-01    0.900    
+        waterfront    -1.241e-11  5.815e-11 -2.130e-01    0.831    
+        view          -6.033e-12  4.719e-11 -1.280e-01    0.898    
+        condition      1.576e-11  5.097e-11  3.090e-01    0.757    
+        grade          3.389e-11  4.487e-11  7.550e-01    0.450    
+        sqft_above     7.269e-11  7.782e-11  9.340e-01    0.350    
+        sqft_basement -4.531e-11  1.110e-10 -4.080e-01    0.683    
+        zipcode               NA         NA         NA       NA    
+        lat           -6.270e-11  5.391e-11 -1.163e+00    0.245    
+        long          -2.108e-11  4.867e-11 -4.330e-01    0.665    
+        sqft_living15 -1.568e-13  5.590e-11 -3.000e-03    0.998    
+        sqft_lot15     5.429e-11  7.241e-11  7.500e-01    0.453    
+        age            5.543e-12  6.138e-11  9.000e-02    0.928    
+        ---
+        Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+        
+        Residual standard error: 6.15e-09 on 21419 degrees of freedom
+        Multiple R-squared:      1,	Adjusted R-squared:      1 
+        F-statistic: 4.788e+30 on 16 and 21419 DF,  p-value: < 2.2e-16
+
 ### multivariate poisson reg (elastic net)
     train_glm <- data[, 2:18]
     test_glm <- data$price
