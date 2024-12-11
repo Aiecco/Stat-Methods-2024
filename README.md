@@ -53,13 +53,16 @@ We aggregate some variables to check likely correlations as to apply high dim te
 
 We plot them
 
+        par(mfrow=(2,3))
         # Visualization: Price vs Total Area
         plot(data$total_sqft, data$price,
              main = "Property Price vs Total Area",
              xlab = "Total Area (sqft)",
              ylab = "Price",
              col = "blue",
-             pch = 16)
+             pch = 1,  # smaller points
+             cex = 0.5)  # reduce point size
+        abline(lm(price ~ total_sqft, data = data), col = "black")
         
         # Visualization: Price vs Age
         plot(data$age_since_reno, data$price,
@@ -67,7 +70,9 @@ We plot them
              xlab = "Age of Property (years since built or renovated)",
              ylab = "Price",
              col = "green",
-             pch = 16)
+             pch = 1,  # smaller points
+             cex = 0.5)  # reduce point size
+        abline(lm(price ~ age_since_reno, data = data), col = "black")
         
         # Visualization: Price vs Total Number of Rooms
         plot(data$total_rooms, data$price,
@@ -75,7 +80,9 @@ We plot them
              xlab = "Total Number of Rooms (Bedrooms + Bathrooms)",
              ylab = "Price",
              col = "red",
-             pch = 16)
+             pch = 1,  # smaller points
+             cex = 0.5)  # reduce point size
+        abline(lm(price ~ total_rooms, data = data), col = "black")
         
         # Visualization: Price vs Bathroom/Bedroom Ratio
         plot(data$bath_per_bed, data$price,
@@ -83,7 +90,9 @@ We plot them
              xlab = "Bathroom to Bedroom Ratio",
              ylab = "Price",
              col = "purple",
-             pch = 16)
+             pch = 1,  # smaller points
+             cex = 0.5)  # reduce point size
+        abline(lm(price ~ bath_per_bed, data = data), col = "black")
         
         # Visualization: Price vs Living Area Difference
         plot(data$sqft_diff_15, data$price,
@@ -91,11 +100,16 @@ We plot them
              xlab = "Living Area Difference (Current vs Neighbors)",
              ylab = "Price",
              col = "orange",
-             pch = 16)
+             pch = 1,  # smaller points
+             cex = 0.5)  # reduce point size
+        abline(lm(price ~ sqft_diff_15, data = data), col = "black")
+
 
 
 We also do a basic correlation analysis
-
+        
+        par(mfrow=(1,1))
+        
         plot_correlation_matrix <- function(cor_matrix, title) {
           n <- nrow(cor_matrix)
           par(mar = c(4, 4, 4, 2)) # Adjust margins
