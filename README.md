@@ -194,7 +194,7 @@ Result:
 
 
 ### multivariate poisson reg with structural vars (elastic net)
-    train_struc <- data[, 2:18]
+    train_struc <- data[, 2:22]
     test_struc <- data$price
     STRUC <- glmnet(
     train_struc, test_struc, standardize=FALSE, family="poisson", alpha=0.1)
@@ -208,25 +208,6 @@ Result:
 Result:
 
     ***STRUC.coefs
-    (Intercept)   1.575673e+04
-    price         9.708495e-01
-    bedrooms      2.231746e-07
-    bathrooms     .           
-    sqft_living   .           
-    sqft_lot      .           
-    floors        .           
-    waterfront    .           
-    view          .           
-    condition     .           
-    grade         .           
-    sqft_above    .           
-    sqft_basement .           
-    zipcode       .           
-    lat           .           
-    long          .           
-    sqft_living15 .           
-    sqft_lot15    .           
-    age           . 
     
 # Group Lasso
 
