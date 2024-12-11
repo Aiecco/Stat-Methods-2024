@@ -29,7 +29,7 @@
 
 # Preprocess/clean
 
-We clean the ID and convert the year-built of the house into its age. We also scale the data.
+We clean the ID and convert the year-built of the house into its age. We also scale the features but not the price.
 
     data$date <- as.Date(substr(data$date, 1, 8), format = "%Y%m%d")
     data$yr_renovated[data$yr_renovated == 0] <- NA
@@ -39,8 +39,9 @@ We clean the ID and convert the year-built of the house into its age. We also sc
 
     data <- data[-c(1, 2, 15, 16)]
 
-    data <- scale(data)
+    data[2:18] <- scale(data)
 
+    
 We create the data matrix X with only the original (cleaned) features to use for gglasso. Y is the true price.
 
     X <- data[,3:18]
