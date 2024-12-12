@@ -196,23 +196,6 @@ Result:
         age                .  
 
 
-
-
-### multivariate poisson reg with structural vars (elastic net)
-    train_struc <- data[, 2:22]
-    test_struc <- data$price
-    STRUC <- glmnet(
-    train_struc, test_struc, standardize=FALSE, family="poisson", alpha=0.1)
-
-    train_struc <- as.matrix(train_struc)  # needed for cv
-    STRUC.cv <- cv.glmnet(train_struc, test_struc, nfolds=1000)
-
-    opt.lam.STRUC <- c(STRUC.cv$lambda.1se)
-    STRUC.coefs <- coef(STRUC.cv, s = opt.lam.STRUC)
-
-Result:
-
-    ***STRUC.coefs
     
 # Group Lasso
 
