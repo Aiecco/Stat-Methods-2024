@@ -44,6 +44,13 @@ We clean the ID and convert the year-built of the house into its age. We also sc
 
     data <- data[-c(1, 2, 15, 16)]
 
+We aggregate some variables to check likely correlations as to apply high dim techniques later on
+
+        data$total_sqft <- data$sqft_living + data$sqft_basement # Total area including basement
+        data$bath_per_bed <- ifelse(data$bedrooms > 0, data$bathrooms / data$bedrooms, 0) # Bathroom to bedroom ratio
+        data$total_rooms <- data$bedrooms + data$bathrooms # Total number of rooms
+        data$sqft_diff_15 <- data$sqft_living - data$sqft_living15 # Difference in living area from nearest neighbors
+
     data[2:18] <- scale(data)
 
     
@@ -56,14 +63,6 @@ We create the data matrix X with only the original (cleaned) features to use for
         
 
 # EDA
-
-We aggregate some variables to check likely correlations as to apply high dim techniques later on
-
-        data$total_sqft <- data$sqft_living + data$sqft_basement # Total area including basement
-        data$bath_per_bed <- ifelse(data$bedrooms > 0, data$bathrooms / data$bedrooms, 0) # Bathroom to bedroom ratio
-        data$total_rooms <- data$bedrooms + data$bathrooms # Total number of rooms
-        data$sqft_diff_15 <- data$sqft_living - data$sqft_living15 # Difference in living area from nearest neighbors
-
 
 We plot them
 
