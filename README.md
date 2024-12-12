@@ -213,7 +213,16 @@ House size metrics capture highly correlated attributes such as the living area 
 
     library(gglasso)
 
+    cor(X) # check correlations to create groupset_2
+    
     groupset_1 <- c(1,1,1,1,1,1,2,2,3,3,1,5,6,6,5,5,4)
+
+    groupset_2 <- c(3,3,1,1,3,4,4,4,4,1,1,2,2,2,1,1,3)
+                    #gr1 area: sqft_living, sqft_above, sqft_basement, sqft_living15, sqft_lot, sqft_lot15
+                    #gr2 spatial dim: lat, long, zipcode
+                    #gr3 rooms and age: bedrooms, bathrooms, floors, age
+                    #gr4 quality and features: grade, condition, view, waterfront
+
 
     fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
     fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
@@ -239,4 +248,8 @@ House size metrics capture highly correlated attributes such as the living area 
     fit.2.lambda <- gglasso(x=X, y=Y, group=groupset_2, loss='ls',lambda.factor=0.0001)
     lambda_0_2 <- fit.2.lambda$lambda.1se
     lambda_1_2 <- fit.2.lambda$lambda.min
-    
+
+
+
+
+ 
