@@ -67,15 +67,15 @@ Y=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k+\epsilon
 \end{equation}
 
 where:$Y$ is the dependent variable, ($X_1, X_2,\dots,X_k$) are the independent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the coefficients and $\epsilon$ is the error term.\\
-
-In our case of interest we use all the the available variables to estimate the house prices.
-The multivariate linear regression with all original features proved a very sparse interpretation from a p-value standpoint, with only one coefficient - the number of bedrooms being a solid price predictor. We try with some more complex models that also use Elastic Net to check whether the sparsity is justified.
+\subsubsection{Experiments}
+In our case of interest we use all the the available variables to estimate the house prices(Table 1).\\
+Among our predictors we find that only the intercept and the coefficient for bedrooms are statistically significant at the 0.001 level, with p-values less than 2e-16. Other predictors like bathrooms, sqft$\_$living, and sqft{\_}lot have high p-values, hence not statistically significant. The zipcode has been omitted because of singularity, meaning either multicollinearity or redundancy. The residual standard error of the model at 6.15e-09 is very low and in general the residuals are also very small, ranging from -7.36e-07 to 1.38e-09. The F-statistic is astronomically large at 4.788e+30.\\
+This multivariate regression is "perfect", given that the adjusted R-squared values are 1, with predictors explaining all the variability in the response variable. This is clearly a case of overfitting, which we need to handle with regularization.
 
 
 \subsection{Multivariate GLM with Elastic Net}
 \subsubsection{The Poisson Distribution}
-Poisson regression is based on the Poisson distribution, which describes the probability of a given number of events occurring in a fixed interval of time or space, given the average rate of occurrence.
-
+Poisson regression is based on the Poisson distribution, which describes the probability of a given number of events occurring in a fixed interval of time or space, given the average rate of occurrence.\\
 The probability mass function of a Poisson-distributed random variable $Y$ is:
 \begin{equation}
 P(Y=y)= \frac{\lambda^ye^{-\lambda}}{y!}
@@ -113,10 +113,7 @@ This means that the objective is to minimize the following loss function:
 \end{equation*}
 
 \subsubsection{Experiments}
-We hence proceed with fitting our Poisson regression to the data. 
-
-
-\section{Neural Network}
+The Poisson regression model(Table 2)output shows that the intercept is 540,529.7, which means that when all the predictors are zero, the dependent variable has a high baseline value. The coefficient for Bedrooms is 356,970.6, which means that with every additional bedroom, the expected value of the outcome increases significantly, holding other factors constant. However, many other factors like Bathrooms, Sqft$\_$Living, Sqft$\_$Lot, Floors, etc., have missing coefficients, represented by periods, and most likely because these variables were excluded from the model, had no significant relationship with the result.
 
 \section{Group Lasso}
 \subsection{The Group Lasso}
@@ -148,8 +145,10 @@ Thus, the optimization problem is:
 \min_{\beta}\left (\frac{1}{2n}\lVert y-X\beta\rVert^{2}_{2} + \lambda \sum_{g=1}^{G}\lVert \beta_{g} \rVert_{2}\right)
 \end{equation}
 
-\subsection{Experiments}
+\subsubsection{Experiments}
 
+
+\section{Neural Network}
 
 \section{Conclusion}
 \noindent
@@ -195,6 +194,7 @@ age               & 5.543e-12   & 6.138e-11  & 9.000e-02  & 0.928        \\
 \hline
 \end{tabular}
 \caption{Multivariate Linear Regression Data Summary}
+\label{mlrcoeffs}
 \end{table}
 
 
@@ -225,7 +225,7 @@ Age           & . \\
 \hline
 \end{tabular}
 \caption{Coefficients from the Poisson model.}
-\label{tab:mglm-coefs}
+\label{glmcoefs}
 \end{table}
 
 
