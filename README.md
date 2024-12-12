@@ -226,17 +226,16 @@ House size metrics capture highly correlated attributes such as the living area 
     fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
     fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
 
-    coef.mat.1=fit$beta
-    coef.mat.2=fit$beta
+    coef.mat.1=fit_1$beta
+    coef.mat.2=fit_2$beta
 
 
     par(mfrow=c(1,2))
-    fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=10, lambda.factor=0.0001)
+    fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=1000, lambda.factor=0.0001)
     plot(fit.cv.1)
     
-    fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=10, lambda.factor=0.0001)
+    fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=1000, lambda.factor=0.0001)
     plot(fit.cv.1)
-
 
 
     # lambda choice
