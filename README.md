@@ -231,10 +231,10 @@ House size metrics capture highly correlated attributes such as the living area 
 
 
     par(mfrow=c(1,2))
-    fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=1000, lambda.factor=0.0001)
+    fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=100, lambda.factor=0.0001)
     plot(fit.cv.1)
     
-    fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=1000, lambda.factor=0.0001)
+    fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=100, lambda.factor=0.0001)
     plot(fit.cv.1)
 
 
