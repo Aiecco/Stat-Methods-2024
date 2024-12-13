@@ -187,8 +187,14 @@ Result:
         sqft_lot15         .  
         age                .  
 
+MGLM actual vs pred
 
-    
+        predMGLM <- predict(MGLM.cv, newx = train_glm, s = opt.lam.MGLM)
+        plot(test_glm, predMGLM, 
+             xlab = "Actual Values", ylab = "Predicted Values", 
+             main = "Actual vs Predicted")
+        abline(0, 1, col = "black", lty = 2)
+
 # Group Lasso
 
 We try group Lasso with two different sets of groups.
