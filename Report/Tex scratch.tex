@@ -145,6 +145,7 @@ Thus, the optimization problem is: \begin{equation}
 
 
 \section{Neural Network} \vspace{-7pt}
+We finally train a deep neural network in order to check which could be the best possible result in any statistical context and if our model choice was insufficient.
 
 \section{Conclusion} \vspace{-7pt}
 \noindent
@@ -154,10 +155,6 @@ Thus, the optimization problem is: \begin{equation}
 
 \pagebreak
 \appendix
-
-\section{Dataset}
-
-
 
 \section{Visualization}
 \begin{figure}[h]
@@ -250,10 +247,15 @@ Sqft\_Lot15    & . \\
 Age           & . \\
 \hline
 \end{tabular}
-\caption{Coefficients from the Poisson model.}
+\caption{Coefficients from the Poisson model}
 \label{glmcoefs}
 \end{table}
 
+\begin{figure}[H]
+\includegraphics[scale=0.65]{MGLMpred}
+\centering
+\caption{Poisson regression actual vs predicted}
+\end{figure}
 
 \begin{figure}[H]
 \includegraphics[scale=0.9]{gglassobasic}
@@ -290,6 +292,50 @@ Age           & . \\
 \centering
 \caption{Cross validation error for Group Lasso}
 \end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.65]{NN}
+\centering
+\caption{Neural Network architecture}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.65]{traintestloss}
+\centering
+\caption{Neural Network training}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.5]{gglasso1pred}
+\centering
+\caption{Group set 1 actual vs predicted}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.5]{gglasso2pred}
+\centering
+\caption{Group set 2 actual vs predicted}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|c|c|c|c|}
+\hline
+\textbf{Model} & \textbf{MSE} & \textbf{R\(^2\)} & \textbf{MAE} \\
+\hline
+Model 1 & 13572908807 & -11.50303 & 48891.6 \\
+Model 2 & 11156390644 & -9.27699 & 43118.46 \\
+\hline
+\end{tabular}
+\caption{Group Lasso evaluation metrics}
+\end{table}
+
+\begin{figure}[H]
+\includegraphics[scale=0.65]{NNpred}
+\centering
+\caption{Neural Network actual vs predicted}
+\end{figure}
+
 
 
 \end{document}
