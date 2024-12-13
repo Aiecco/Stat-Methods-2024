@@ -1,12 +1,5 @@
 # Stat-Methods-2024
 
-TO DO:
-- descrizione matematica reg lineare, reg poisson
-- descrizione risultati reg lineare, reg poisson, reg poisson strutturale, primo group lasso
-- modificare formule group lasso come nelle slides
-
-
-
 # Dataset
         https://www.kaggle.com/datasets/sukhmandeepsinghbrar/housing-price-dataset/data
 
