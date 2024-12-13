@@ -201,7 +201,7 @@ We try group Lasso with two different sets of groups.
 
 ### 1. How real estate professionals evaluate property value
 
-Physical characteristics include the living area size, lot size, above-ground and basement areas, number of bedrooms, bathrooms, and floors. Aesthetic and view features detail whether the property has a waterfront view and the quality of its overall view. Condition and grade focus on the property's overall condition and grade ratings. Temporal aspects provide information on the year the property was built, and its age. Neighborhood context includes the average living area and lot size of the 15 nearest properties and the property’s zip code. Finally, the geographic location is specified by its latitude and longitude coordinates.
+Physical characteristics are the living area size, lot size, above-ground and basement areas, number of bedrooms, bathrooms, and floors. Aesthetic and view features say whether the property has a waterfront view and the quality of its overall view. Condition and grade focus on the property's overall condition and grade ratings. Temporal aspects say about the year the property was built, and its age. Neighborhood context has the average living area and lot size of the 15 nearest properties and the property’s zip code. The geographic location is specified by its latitude and longitude coordinates.
 
 ### 2 Variables expected to be highly correlated.
 
@@ -249,60 +249,50 @@ House size metrics capture highly correlated attributes such as the living area 
 
 What we plot (gglasso):
 
-- coefficient matrices
-- cv plot
-- lambda path
-- feature importance
-- residuals
-                
-                # Heatmap for Group Set 1
+
+                # Heatmap
                 image(1:nrow(coef.mat.1), 1:ncol(coef.mat.1), as.matrix(coef.mat.1), 
                       xlab = "Features", ylab = "Lambda", main = "Coefficient Heatmap: Group Set 1",
                       col = heat.colors(100))
                 
-                # Heatmap for Group Set 2
                 image(1:nrow(coef.mat.2), 1:ncol(coef.mat.2), as.matrix(coef.mat.2), 
                       xlab = "Features", ylab = "Lambda", main = "Coefficient Heatmap: Group Set 2",
                       col = heat.colors(100))
                 
-                # Cross-validation plot for Group Set 1
+                # Cross-validation plot 
                 plot(fit.cv.1$lambda, fit.cv.1$cvm, type = "b", log = "x",
                      xlab = "Log(Lambda)", ylab = "Cross-Validation Error",
                      main = "CV Error: Group Set 1")
                 
-                # Cross-validation plot for Group Set 2
                 plot(fit.cv.2$lambda, fit.cv.2$cvm, type = "b", log = "x",
                      xlab = "Log(Lambda)", ylab = "Cross-Validation Error",
                      main = "CV Error: Group Set 2")
                 
-                # Lambda Path for Group Set 1
+                # Lambda Path
                 matplot(log(fit_1$lambda), t(as.matrix(coef.mat.1)), type = "l", 
                         xlab = "Log(Lambda)", ylab = "Coefficients", 
                         main = "Coefficient Path: Group Set 1", col = 1:nrow(coef.mat.1), lty = 1)
                 
-                # Lambda Path for Group Set 2
                 matplot(log(fit_2$lambda), t(as.matrix(coef.mat.2)), type = "l", 
                         xlab = "Log(Lambda)", ylab = "Coefficients", 
                         main = "Coefficient Path: Group Set 2", col = 1:nrow(coef.mat.2), lty = 1)
                 
-                # Feature importance for Group Set 1
+                # Feature importance
                 importance_1 <- rowSums(abs(as.matrix(coef.mat.1)))
                 barplot(importance_1, main = "Feature Importance: Group Set 1", 
                         xlab = "Groups", ylab = "Sum of Absolute Coefficients", col = "blue")
                 
-                # Feature importance for Group Set 2
                 importance_2 <- rowSums(abs(as.matrix(coef.mat.2)))
                 barplot(importance_2, main = "Feature Importance: Group Set 2", 
                         xlab = "Groups", ylab = "Sum of Absolute Coefficients", col = "green")
                 
-                # Residuals for Group Set 1
+                # Residuals
                 preds_1 <- predict(fit.cv.1, s = lambda_1_1, X)
                 residuals_1 <- Y - preds_1
                 plot(preds_1, residuals_1, main = "Residual Plot: Group Set 1", 
                      xlab = "Predicted", ylab = "Residuals", pch = 16, col = "blue")
                 abline(h = 0, col = "red")
                 
-                # Residuals for Group Set 2
                 preds_2 <- predict(fit.cv.2, s = lambda_1_2, X)
                 residuals_2 <- Y - preds_2
                 plot(preds_2, residuals_2, main = "Residual Plot: Group Set 2", 
