@@ -302,3 +302,30 @@ What we plot (gglasso):
                 plot(preds_2, residuals_2, main = "Residual Plot: Group Set 2", 
                      xlab = "Predicted", ylab = "Residuals", pch = 16, col = "green")
                 abline(h = 0, col = "red")
+
+
+Error plots for Neural Network comparison
+
+        y_pred_1 <- predict(fit_1, newx=X_test, lambda=lambda_1_1)
+        y_pred_2 <- predict(fit_2, newx=X_test, lambda=lambda_1_2)
+        
+        mse_1 <- mean((Y_test - y_pred_1)^2)
+        r2_1 <- 1 - sum((Y_test - y_pred_1)^2) / sum((Y_test - mean(Y_test))^2)
+        mae_1 <- mean(abs(Y_test - y_pred_1))
+        
+        mse_2 <- mean((Y_test - y_pred_2)^2)
+        r2_2 <- 1 - sum((Y_test - y_pred_2)^2) / sum((Y_test - mean(Y_test))^2)
+        mae_2 <- mean(abs(Y_test - y_pred_2))
+        
+        cat("Model 1 - MSE:", mse_1, "R2:", r2_1, "MAE:", mae_1, "\n")
+        cat("Model 2 - MSE:", mse_2, "R2:", r2_2, "MAE:", mae_2, "\n")
+        plot(Y_test, y_pred_1, xlab="Actual", ylab="Predicted", main="GLM Group 1: Actual vs Predicted")
+        abline(0, 1, col='red')
+        
+        plot(Y_test, y_pred_2, xlab="Actual", ylab="Predicted", main="GLM Group 2: Actual vs Predicted")
+        abline(0, 1, col='red')
+        coef_1 <- coef(fit_1, s=lambda_1_1)
+        coef_2 <- coef(fit_2, s=lambda_1_2)
+        
+        print(coef_1)
+        print(coef_2)
