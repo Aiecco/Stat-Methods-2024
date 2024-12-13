@@ -304,12 +304,12 @@ What we plot (gglasso):
                 abline(h = 0, col = "red")
 
 
-Error plots for Neural Network comparison
+Prediction plots for Neural Network comparison
 
-                cat("Model 1 - MSE:", mse_1, "R2:", r2_1, "MAE:", mae_1, "\n")
- Model 1 - MSE: 13572908807 R2: -11.50303 MAE: 48891.6 
- 
-                cat("Model 2 - MSE:", mse_2, "R2:", r2_2, "MAE:", mae_2, "\n")
- Model 2 - MSE: 11156390644 R2: -9.27699 MAE: 43118.46 
+         plt=cbind(Y, predict(object=fit.1.lambda, newx=X, s=lambda_0_1), predict(object=fit.1.lambda, newx=X, s=lambda_1_1)) #,type='link'))
+         matplot(plt,main="Predicted vs Actual", type='l', lwd=2)
+         grid()
         
-
+         plt=cbind(Y, predict(object=fit.2.lambda, newx=X, s=lambda_0_2), predict(object=fit.2.lambda, newx=X, s=lambda_1_2)) #,type='link'))
+         matplot(plt,main="Predicted vs Actual", type='l', lwd=2)
+         grid()
