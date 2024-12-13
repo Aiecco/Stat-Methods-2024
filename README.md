@@ -311,14 +311,12 @@ What we plot (gglasso):
 
 
 Prediction plots for Neural Network comparison
-
-         plt=cbind(Y, predict(object=fit.1.lambda, newx=X, s=lambda_0_1), predict(object=fit.1.lambda, newx=X, s=lambda_1_1)) #,type='link'))
-         matplot(plt,main="Predicted vs Actual", type='l', lwd=2)
-         grid()
         
-         plt=cbind(Y, predict(object=fit.2.lambda, newx=X, s=lambda_0_2), predict(object=fit.2.lambda, newx=X, s=lambda_1_2)) #,type='link'))
-         matplot(plt,main="Predicted vs Actual", type='l', lwd=2)
-         grid()
+        pred_1_1se <- predict(fit_1, newx = X, s = lambda_0_1)
+        pred_1_min <- predict(fit_1, newx = X, s = lambda_1_1)
+        
+        pred_2_1se <- predict(fit_2, newx = X, s = lambda_0_2)
+        pred_2_min <- predict(fit_2, newx = X, s = lambda_1_2)
 
 
 MSE
