@@ -1,9 +1,11 @@
-\documentclass[a4paper, 8pt]{article}
+\documentclass[a4paper, 9pt]{article}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\graphicspath{ {./images/} }
 \usepackage{rotating}
+\usepackage{float}
 
 \usepackage[a4paper,
             left=0.6in,
@@ -15,11 +17,9 @@
 \usepackage{lipsum}
 
 \usepackage{multicol}
-\setlength{\columnsep}{0.3cm}
+\setlength{\columnsep}{0.4cm}
 
-% Title Setup
 \title{Application of High Dimensional Techniques to House Price Prediction}
-
 \vspace{5pt}
 
 \author{
@@ -30,6 +30,7 @@
   \texttt{domenico.tremaggi@studenti.unipd.it}
 }
 \date{}
+
 \begin{document}
 
 \maketitle
@@ -41,7 +42,7 @@ This experiment explores two different sets of grouped variables through a Group
 
 \begin{multicols}{2}
 
-\section{Introduction}
+\section{Introduction} \vspace{-7pt}
 In order to approach the dataset, we first think about which models and variables can predict real estate prices in the real world, with the constraint of the set of variables given by the dataset. Since we handle a price prediction regression, a fair comparison of linear and non-linear basic models - be them regularized or not - would be multivariate. Hence, we first carry a synthetic application of the following models: multivariate linear model and multivariate Poisson regression with an $\alpha = 0.1$ Elastic Net.
 
 We then train a deep Multi-Layer Perceptron for performance comparison and we regularize it with a simple Lasso.
@@ -49,46 +50,47 @@ Finally, we utilise a Group Lasso regression on two sets of groups of variables 
 
 All selection for regularized models is carried through with cross-validation.
 
-\section{Dataset}
+\section{Dataset} \vspace{-7pt}
 The dataset contains real estate property listings, each described by a variety of attributes. Temporal attributes are: the listing date, the year the property was built, and the year of its last renovation. Physical characteristics are: the number of bedrooms and bathrooms, living area size, total lot size, number of floors, basement area, and living area above ground. Scenic qualities are represented by a waterfront view indicator, a view quality rating, an overall condition rating, and an overall grade rating. Locational data instead include zip code,  latitude, and longitude. There is also some additional spatial context given by the average living area and lot sizes of the 15 nearest properties.
 
-\subsection{Pre-processing}
+\subsection{Pre-processing} \vspace{-3pt}
 In order to pre-process the data, we first convert the date column into a proper date object by extracting the first 8 characters (in "YYYYMMDD" format). We then replace 0 values in the "yr{\_}renovated" column with NA, treating them as missing data. Duplicate rows are removed based on the id column.
 We add new variables in the dataset: total{\_}sqft calculates total area by summing living and basement space, bath{\_}per{\_}bed computes the bathroom-to-bedroom ratio (defaulting to 0 if bedrooms are 0), and total{\_}rooms sums bedrooms and bathrooms. sqft{\_}diff{\_}15 measures the difference between the property’s living area and that of its 15 nearest neighbors, while age{\_}since{\_}reno calculates the property’s age since construction, defaulting to 0 if the year is invalid.
 The first, second, fifteenth and sixteenth columns are dropped since they are analytically irrelevant (date, id, with yr{\_}built and yr{\_}renovated being substituted by "age"). We then scale the features of the data frame.
 The price and the non-structural features are extracted as columns 2 to 18 and scaled in the new matrix X, which will be used for the Group Lasso. The price, or target, is stored in a separate vector Y.
 
-\section{Base Models}
-\subsection{Multivariate linear model}
-Multivariate Linear Regression is an extension of linear regression where the goal is to model the relationship between multiple independent variables (also called predictors or features) and a dependent variable (also called the target or response variable). It is used when you have more than one predictor variable that you believe influences the dependent variable. \newpage
+\section{Base Models} \vspace{-7pt}
+\subsection{Multivariate linear model} \vspace{-3pt}
+Multivariate Linear Regression is an extension of linear regression where the goal is to model the relationship between multiple independent variables (also called predictors or features) and a dependent variable (also called the target or response variable). It is used when you have more than one predictor variable that you believe influences the dependent variable.
+
 \subsubsection*{Mathematical equation}
 \begin{equation}
 Y=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k+\epsilon
 \end{equation}
 
 where:$Y$ is the dependent variable, ($X_1, X_2,\dots,X_k$) are the independent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the coefficients and $\epsilon$ is the error term.\\
-\subsubsection{Experiments}
+\subsubsection*{Experiments}
 In our case of interest we use all the the available variables to estimate the house prices(Table 1).\\
 Among our predictors we find that only the intercept and the coefficient for bedrooms are statistically significant at the 0.001 level, with p-values less than 2e-16. Other predictors like bathrooms, sqft$\_$living, and sqft{\_}lot have high p-values, hence not statistically significant. The zipcode has been omitted because of singularity, meaning either multicollinearity or redundancy. The residual standard error of the model at 6.15e-09 is very low and in general the residuals are also very small, ranging from -7.36e-07 to 1.38e-09. The F-statistic is astronomically large at 4.788e+30.\\
 This multivariate regression is "perfect", given that the adjusted R-squared values are 1, with predictors explaining all the variability in the response variable. This is clearly a case of overfitting, which we need to handle with regularization.
 
 
-\subsection{Multivariate GLM with Elastic Net}
-\subsubsection{The Poisson Distribution}
+\subsection{Multivariate GLM with Elastic Net} \vspace{-3pt}
+\subsubsection*{The Poisson Distribution}
 Poisson regression is based on the Poisson distribution, which describes the probability of a given number of events occurring in a fixed interval of time or space, given the average rate of occurrence.\\
 The probability mass function of a Poisson-distributed random variable $Y$ is:
 \begin{equation}
 P(Y=y)= \frac{\lambda^ye^{-\lambda}}{y!}
 \end{equation}
 Where: $y$ is the count of events (e.g., number of accidents, number of emails received) and $\lambda$ is the rate of occurrence, which is the expected number of events in the fixed interval.
-\subsubsection{The Poisson Regression Model}
+\subsubsection*{The Poisson Regression Model}
 Poisson regression assumes that the logarithm of the expected count (rate) is a linear function of the independent variables.\\
 The model is expressed as:
 \begin{equation}
 \log(\lambda_i)=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k
 \end{equation}
 where: ($X_1, X_2,\dots,X_k$) are the indipendent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the regression coefficients
-\subsubsection{Elastic Net}
+\subsubsection*{Elastic Net}
 In regular linear regression or GLMs, the model can overfit the data if there are many predictors, especially when some predictors are irrelevant or highly correlated, but it can also use some sparsity enforcement, so we applied an Elastic Net regression. This kind of regularization combines $L_1$ and $L_2$ regularizations and applies penalty to coefficients as to: 
 \begin{itemize}
 \item Lasso ($L_1$1): Shrink some coefficients to zero, performing feature selection.
@@ -99,7 +101,7 @@ Mathematically, the Elastic Net penalty is given by:
 \text{Penalty}= \gamma \left[\alpha \sum_{j=1}^k|\beta_j| + \frac{1}{2}(1-\alpha)\sum_{j=1}^k\beta_{j}^{2} \right]
 \end{equation} 
 where $\gamma$ controls the strength of the regularization (larger $\gamma$ means more regularization), $\alpha$ controls the balance between Lasso and Ridge. If $\alpha=1$, the penalty is purely Lasso; if $\alpha=0$, the penalty is purely Ridge, meaning our $\alpha = 0.1$ choice mostly applies an $L_2$ penalty. We chose this hyperparameter after some experiments that suggested that even a very small Lasso penalty enforced sparsity efficiently.
-\subsubsection{Poisson Regression with Elastic Net}
+\subsubsection*{Poisson Regression with Elastic Net}
 When you combine Poisson regression with Elastic Net regularization the model becomes:
 \begin{equation}
 \begin{split}
@@ -112,45 +114,39 @@ This means that the objective is to minimize the following loss function:
 \text{Loss}=\sum_{i=1}^n(-Y_i \log(\lambda_i)+ \lambda_i)+ \gamma \left[\alpha \sum_{j=1}^k|\beta_j| + \frac{1}{2}(1-\alpha)\sum_{j=1}^k\beta_{j}^{2} \right]
 \end{equation*}
 
-\subsubsection{Experiments}
+\subsubsection*{Experiments}
 The Poisson regression model(Table 2)output shows that the intercept is 540,529.7, which means that when all the predictors are zero, the dependent variable has a high baseline value. The coefficient for Bedrooms is 356,970.6, which means that with every additional bedroom, the expected value of the outcome increases significantly, holding other factors constant. However, many other factors like Bathrooms, Sqft$\_$Living, Sqft$\_$Lot, Floors, etc., have missing coefficients, represented by periods, and most likely because these variables were excluded from the model, had no significant relationship with the result.
 
-\section{Group Lasso}
-\subsection{The Group Lasso}
+\section{Group Lasso} \vspace{-7pt}
 The Group Lasso is an extension of the classical Lasso method applied for regularization and variable selection designed to work with grouped variables, and such a situation is helpful when given variables naturally fall into groups, and we want to choose or discard entire groups of variables simultaneously rather than choosing or dropping individual variables.
 
 The main mathematical goal of the Group Lasso is to do regression by penalizing the sum of the norms of the coefficients in each group. That will induce sparsity at the level of groups, that is, all coefficients in a group will either be shrunk towards zero, or not. Therefore, entire groups of variables are either selected or not.
 
-\subsubsection*{Mathematical Formulation}
+\subsection{Mathematical Formulation} \vspace{-3pt}
 For a given linear regression problem, the model can be represented as:
 \begin{equation}
 y=X\beta + \epsilon
 \end{equation}
 where: $y$ is the $n \times 1$ vector of observed responses, $X$ is the $n \times p$ matrix of predictors, $\beta$ is the $p \times 1$ vector of regression coefficient and $\epsilon$ is the error term, assumed to be normally distributed.\\
 
-In ordinary linear regression, we try to minimize the residual squared error:
-\begin{equation}
-\min_{\beta}\left (\frac{1}{2n}\lVert y-X\beta\rVert^{2}_{2} \right)
+In ordinary linear regression, we try to minimize the residual squared error: \begin{equation} \min_{\beta}\left (\frac{1}{2n}\lVert y-X\beta\rVert^{2}_{2} \right) 
 \end{equation}
 
-In the case of Group Lasso, we add a regularization term to the objective function that penalizes the coefficients in groups. If the variables are divided into $G$ groups, and group $g$ contains $p_{g}$ variables, the Group Lasso penalty is given by:
-\begin{equation}
-\lambda \sum_{g=1}^{G}\lVert \beta_{g} \rVert_{2}
+In the case of Group Lasso, we add a regularization term to the objective function that penalizes the coefficients in groups. If the variables are divided into $G$ groups, and group $g$ contains $p_{g}$ variables, the Group Lasso penalty is given by: \begin{equation} \lambda \sum_{g=1}^{G}\lVert \beta_{g} \rVert_{2}
 \end{equation}
 
 The idea would be: where: $\beta_g$ represents the coefficient corresponding to the $g$-th group of variables, $\lVert \beta_g \rVert_2$ is the euclidean norm of the coefficient vector, $\lambda$ is a regularization parameter that regulates its strength.
 
-Thus, the optimization problem is:
-\begin{equation}
+Thus, the optimization problem is: \begin{equation}
 \min_{\beta}\left (\frac{1}{2n}\lVert y-X\beta\rVert^{2}_{2} + \lambda \sum_{g=1}^{G}\lVert \beta_{g} \rVert_{2}\right)
 \end{equation}
 
-\subsubsection{Experiments}
+\subsection{Experiments} \vspace{-3pt}
 
 
-\section{Neural Network}
+\section{Neural Network} \vspace{-7pt}
 
-\section{Conclusion}
+\section{Conclusion} \vspace{-7pt}
 \noindent
 
 \end{multicols}
@@ -164,8 +160,25 @@ Thus, the optimization problem is:
 
 
 \section{Visualization}
+\begin{figure}[h]
+\includegraphics[scale=0.6]{corrplots}
+\centering
+\caption{How price behaves with aggregated variables}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{corrmatplot}
+\centering
+\caption{Correlation matrix to pick groups in the second set of Group Lasso}
+\end{figure}
+
 
 \section{Regressions}
+\begin{figure}[H]
+\includegraphics[scale=0.9]{MLR}
+\centering
+\caption{Multivariate linear regression plot}
+\end{figure}
 
 \begin{table}[ht]
 \centering
@@ -196,6 +209,19 @@ age               & 5.543e-12   & 6.138e-11  & 9.000e-02  & 0.928        \\
 \caption{Multivariate Linear Regression Data Summary}
 \label{mlrcoeffs}
 \end{table}
+
+
+\begin{figure}[H]
+\includegraphics[scale=0.9]{MGLM}
+\centering
+\caption{Multivariate Poisson regression coefficient path}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{MGLMcv}
+\centering
+\caption{Cross validation plot for Poisson regression}
+\end{figure}
 
 
 \begin{table}[ht]
@@ -229,8 +255,41 @@ Age           & . \\
 \end{table}
 
 
-% Bibliography Section (if needed)
-% \bibliographystyle{plain}
-% \bibliography{references}
+\begin{figure}[H]
+\includegraphics[scale=0.9]{gglassobasic}
+\centering
+\caption{Group sets comparison for Group Lasso}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{gglassocoefpath}
+\centering
+\caption{Coefficient path for Group Lasso}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{gglassofeatures}
+\centering
+\caption{Best features for each group set for Group Lasso}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.8]{gglassoheat}
+\centering
+\caption{Feature heatmap for Group Lasso}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.85]{gglassocv}
+\centering
+\caption{Cross validation plot for Group Lasso}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.85]{gglassocverror}
+\centering
+\caption{Cross validation error for Group Lasso}
+\end{figure}
+
 
 \end{document}
