@@ -316,3 +316,81 @@ MSE
  
                 cat("Model 2 - MSE:", mse_2, "R2:", r2_2, "MAE:", mae_2, "\n")
  Model 2 - MSE: 11156390644 R2: -9.27699 MAE: 43118.46 
+
+
+---------------------------------------------------
+##### IMPORTAN Edit 
+We just now spotted a big typo error in the code, the group lasso lambdas were not used on the results of cross-validated lasso but on the results of the first gglasso fit, which created all the bad fits of the code.
+The rightly calculated code snippet is the following:
+
+        lambda_0_1 <- fit.cv.1$lambda.1se  # within 1 standard error
+        lambda_1_1 <- fit.cv.1$lambda.min  # minimizing the cross-validation error
+        lambda_0_2 <- fit.cv.2$lambda.1se
+        lambda_1_2 <- fit.cv.2$lambda.min
+        
+        # preds
+        pred_1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
+        pred_2_min <- predict(fit.cv.2, newx = X, s = lambda_1_2)
+
+
+Which yield:
+
+        mse_1_min <- mean((Y - pred_1_min)^2)
+        r2_1_min <- 1 - sum((Y - pred_1_min)^2) / sum((Y - mean(Y))^2)
+
+        mse_2_min <- mean((Y - pred_2_min)^2)
+        r2_2_min <- 1 - sum((Y - pred_2_min)^2) / sum((Y - mean(Y))^2)
+
+
+
+Plots:
+
+                fitted1_1se <- predict(fit.cv.1, newx = X, s = lambda_0_1)
+                fitted1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
+
+        plt <- cbind(Y, fitted1_1se, fitted1_min)
+        matplot(
+          plt,
+          main = "Predicted vs Actual",
+          type = 'l',
+          lwd = 2,
+          col = 1:3,  # Color for the lines
+          ylab = "Response Variable",
+          xlab = "Observations"
+        )
+        
+        grid()
+        
+        legend(
+          "topright",
+          legend = c("Actual", "Fitted-1se", "Fitted-min"),
+          col = 1:3,
+          lty = 1:3,  # Line styles
+          lwd = 2,
+          bty = "n"
+        )
+
+                fitted2_1se <- predict(fit.cv.2, newx = X, s = lambda_0_1)
+                fitted2_min <- predict(fit.cv.2, newx = X, s = lambda_1_1)
+
+        plt <- cbind(Y, fitted2_1se, fitted2_min)
+        matplot(
+          plt,
+          main = "Predicted vs Actual",
+          type = 'l',
+          lwd = 2,
+          col = 1:3,  # Color for the lines
+          ylab = "Response Variable",
+          xlab = "Observations"
+        )
+        
+        grid()
+        
+        legend(
+          "topright",
+          legend = c("Actual", "Fitted-1se", "Fitted-min"),
+          col = 1:3,
+          lty = 1:3,  # Line styles
+          lwd = 2,
+          bty = "n"
+        )
