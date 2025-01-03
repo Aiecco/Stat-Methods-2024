@@ -57,49 +57,33 @@ We create the data matrix X with only the original (cleaned) features to use for
 
 # EDA
 
-We plot them
-
-        par(mfrow=c(2,2))
-        # Visualization: Price vs Total Area
-        plot(data$total_sqft, data$price,
-             main = "Property Price vs Total Area",
-             xlab = "Total Area (sqft)",
-             ylab = "Price",
-             col = "blue",
-             pch = 1,  # smaller points
-             cex = 0.5)  # reduce point size
-        abline(lm(price ~ total_sqft, data = data), col = "black")
+We plot them (do this before scaling)
         
-        # Visualization: Price vs Total Number of Rooms
-        plot(data$total_rooms, data$price,
-             main = "Property Price vs Total Number of Rooms",
-             xlab = "Total Number of Rooms (Bedrooms + Bathrooms)",
-             ylab = "Price",
-             col = "red",
-             pch = 1,  # smaller points
-             cex = 0.5)  # reduce point size
-        abline(lm(price ~ total_rooms, data = data), col = "black")
+        plot(data$bedrooms, data$price, main = "Price vs Bedrooms", xlab = "Bedrooms", ylab = "Price", pch = 19, col = "blue", cex = 0.8)
+        abline(lm(price ~ bedrooms, data = data), col = "red", lwd = 2)
         
-        # Visualization: Price vs Bathroom/Bedroom Ratio
-        plot(data$bath_per_bed, data$price,
-             main = "Property Price vs Bathroom to Bedroom Ratio",
-             xlab = "Bathroom to Bedroom Ratio",
-             ylab = "Price",
-             col = "purple",
-             pch = 1,  # smaller points
-             cex = 0.5)  # reduce point size
-        abline(lm(price ~ bath_per_bed, data = data), col = "black")
+        plot(data$bathrooms, data$price, main = "Price vs Bathrooms", xlab = "Bathrooms", ylab = "Price", pch = 19, col = "purple", cex = 0.8)
+        abline(lm(price ~ bathrooms, data = data), col = "red", lwd = 2)
         
-        # Visualization: Price vs Living Area Difference
-        plot(data$sqft_diff_15, data$price,
-             main = "Property Price vs Living Area Difference",
-             xlab = "Living Area Difference (Current vs Neighbors)",
-             ylab = "Price",
-             col = "orange",
-             pch = 1,  # smaller points
-             cex = 0.5)  # reduce point size
-        abline(lm(price ~ sqft_diff_15, data = data), col = "black")
-
+        plot(data$sqft_living, data$price, main = "Price vs Sqft Living", xlab = "Sqft Living", ylab = "Price", pch = 19, col = "green", cex = 0.8)
+        abline(lm(price ~ sqft_living, data = data), col = "red", lwd = 2)
+        
+        mean_price_floors <- tapply(data$price, data$floors, mean)
+        barplot(mean_price_floors, main = "Average Price by Floors", xlab = "Floors", ylab = "Average Price", col = "orange", border = "black")
+        
+        plot(data$long, data$lat, main = "Location", xlab = "Longitude", ylab = "Latitude", pch = 19, col = "cyan", cex = 0.8)
+        
+        mean_price_condition <- tapply(data$price, data$condition, mean)
+        barplot(mean_price_condition, main = "Average Price by Condition", xlab = "Condition", ylab = "Average Price", col = "yellow", border = "black")
+        
+        plot(data$sqft_lot, data$price, main = "Price vs Sqft Lot", xlab = "Sqft Lot", ylab = "Price", pch = 19, col = "orange", cex = 0.8)
+        abline(lm(price ~ sqft_lot, data = data), col = "red", lwd = 2)
+        
+        mean_price_grade <- tapply(data$price, data$grade, mean)
+        barplot(mean_price_grade, main = "Average Price by Grade", xlab = "Grade", ylab = "Average Price", col = "pink", border = "black")
+        
+        plot(data$age, data$price, main = "Price vs Age", xlab = "Age", ylab = "Price", pch = 19, col = "darkgreen", cex = 0.8)
+        abline(lm(price ~ age, data = data), col = "red", lwd = 2)
 
 
 We also do a basic correlation analysis
