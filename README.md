@@ -45,7 +45,7 @@ We aggregate some variables to check likely correlations as to apply high dim te
         data$sqft_diff_15 <- data$sqft_living - data$sqft_living15 # Difference in living area from nearest neighbors
         
         data[2:6] <- scale(data[2:6])
-        data[8:18] <- scale(data[8:18])
+        data[8:22] <- scale(data[8:22])
     
 We create the data matrix X with only the original (cleaned) features to use for gglasso. Y is the true price.
 
@@ -100,51 +100,56 @@ We also do a basic correlation analysis
 
 
 ### multivariate linear reg
-                MLR <- lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors +
-                       waterfront + view + condition + grade + sqft_above + sqft_basement +
-                       zipcode + lat + long + sqft_living15 + sqft_lot15 + age, data = data)
+        MLR <- lm(price ~ bedrooms + bathrooms + sqft_living + sqft_lot + floors +
+                      waterfront + view + condition + grade + sqft_above + sqft_basement +
+                      zipcode + lat + long + sqft_living15 + sqft_lot15 + age + total_sqft + 
+                      bath_per_bed + total_rooms + sqft_diff_15, data = data)
 
 Results:
 
         Residuals:
-              Min        1Q    Median        3Q       Max 
-        -7.36e-07 -3.00e-11  6.00e-11  1.50e-10  1.38e-09 
+             Min       1Q   Median       3Q      Max 
+        -1177083  -101197   -11144    77629  4586690 
         
-        Coefficients: (1 not defined because of singularities)
-                        Estimate Std. Error    t value Pr(>|t|)    
-        (Intercept)    5.405e+05  4.201e-11  1.287e+16   <2e-16 ***
-        bedrooms       3.677e+05  7.398e-11  4.970e+15   <2e-16 ***
-        bathrooms      7.485e-11  5.423e-11  1.380e+00    0.168    
-        sqft_living    3.946e-11  7.260e-11  5.440e-01    0.587    
-        sqft_lot      -1.557e-10  1.267e-10 -1.229e+00    0.219    
-        floors         7.671e-12  6.084e-11  1.260e-01    0.900    
-        waterfront    -1.241e-11  5.815e-11 -2.130e-01    0.831    
-        view          -6.033e-12  4.719e-11 -1.280e-01    0.898    
-        condition      1.576e-11  5.097e-11  3.090e-01    0.757    
-        grade          3.389e-11  4.487e-11  7.550e-01    0.450    
-        sqft_above     7.269e-11  7.782e-11  9.340e-01    0.350    
-        sqft_basement -4.531e-11  1.110e-10 -4.080e-01    0.683    
-        zipcode               NA         NA         NA       NA    
-        lat           -6.270e-11  5.391e-11 -1.163e+00    0.245    
-        long          -2.108e-11  4.867e-11 -4.330e-01    0.665    
-        sqft_living15 -1.568e-13  5.590e-11 -3.000e-03    0.998    
-        sqft_lot15     5.429e-11  7.241e-11  7.500e-01    0.453    
-        age            5.543e-12  6.138e-11  9.000e-02    0.928    
+        Coefficients: (4 not defined because of singularities)
+                      Estimate Std. Error t value Pr(>|t|)    
+        (Intercept)     535932       1402 382.131  < 2e-16 ***
+        bedrooms        -29948       1819 -16.466  < 2e-16 ***
+        bathrooms        14607       2845   5.134 2.87e-07 ***
+        sqft_living     147089       4093  35.937  < 2e-16 ***
+        sqft_lot          5957       2023   2.945  0.00323 ** 
+        floors            3164       1995   1.586  0.11265    
+        waterfront      604646      17627  34.303  < 2e-16 ***
+        view             44063       1668  26.413  < 2e-16 ***
+        condition        18271       1570  11.641  < 2e-16 ***
+        grade           107358       2572  41.738  < 2e-16 ***
+        sqft_above       19001       3712   5.119 3.10e-07 ***
+        sqft_basement       NA         NA      NA       NA    
+        zipcode         -29200       1798 -16.239  < 2e-16 ***
+        lat              86477       1514  57.121  < 2e-16 ***
+        long            -35150       1878 -18.712  < 2e-16 ***
+        sqft_living15    10921       2408   4.535 5.80e-06 ***
+        sqft_lot15      -10106       2039  -4.957 7.23e-07 ***
+        age              59858       2105  28.437  < 2e-16 ***
+        total_sqft          NA         NA      NA       NA    
+        bath_per_bed     21206       1931  10.983  < 2e-16 ***
+        total_rooms         NA         NA      NA       NA    
+        sqft_diff_15        NA         NA      NA       NA    
         ---
         Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
         
-        Residual standard error: 6.15e-09 on 21419 degrees of freedom
-        Multiple R-squared:      1,	Adjusted R-squared:      1 
-        F-statistic: 4.788e+30 on 16 and 21419 DF,  p-value: < 2.2e-16
+        Residual standard error: 204400 on 21418 degrees of freedom
+        Multiple R-squared:  0.6912,	Adjusted R-squared:  0.691 
+        F-statistic:  2820 on 17 and 21418 DF,  p-value: < 2.2e-16
 
 ### multivariate poisson reg (elastic net)
-    train_glm <- data[, 2:18]
-    test_glm <- data$price
+    x_glm <- data[, 2:22]
+    y_glm <- data$price
     MGLM <- glmnet(
-    train_glm, test_glm, standardize=FALSE, family="poisson", alpha=0.1)
+    x_glm, y_glm, standardize=FALSE, family="poisson", alpha=0.5)
 
-    train_glm <- as.matrix(train_glm)  # needed for cv
-    MGLM.cv <- cv.glmnet(train_glm, test_glm, nfolds=1000)
+    x_glm <- as.matrix(x_glm)  # needed for cv
+    MGLM.cv <- cv.glmnet(x_glm, y_glm, nfolds=1000)
 
     opt.lam.MGLM <- c(MGLM.cv$lambda.1se)
     MGLM.coefs <- coef(MGLM.cv, s = opt.lam.MGLM)
@@ -152,29 +157,34 @@ Results:
 Result:
 
         ****MGLM.coefs
-        (Intercept)   540529.7
-        bedrooms      356970.6
-        bathrooms          .  
-        sqft_living        .  
-        sqft_lot           .  
-        floors             .  
-        waterfront         .  
-        view               .  
-        condition          .  
-        grade              .  
-        sqft_above         .  
-        sqft_basement      .  
-        zipcode            .  
-        lat                .  
-        long               .  
-        sqft_living15      .  
-        sqft_lot15         .  
-        age                .  
+        (Intercept)   536525.639
+        bedrooms       -1009.958
+        bathrooms          .    
+        sqft_living   145781.906
+        sqft_lot           .    
+        floors             .    
+        waterfront    526574.268
+        view           40996.640
+        condition      11319.671
+        grade         109439.811
+        sqft_above         .    
+        sqft_basement      .    
+        zipcode            .    
+        lat            74933.499
+        long          -11647.660
+        sqft_living15   6652.210
+        sqft_lot15         .    
+        age            38344.499
+        total_sqft         .    
+        bath_per_bed   17377.920
+        total_rooms        .    
+        sqft_diff_15       .    
+
 
 MGLM actual vs pred
 
-        predMGLM <- predict(MGLM.cv, newx = train_glm, s = opt.lam.MGLM)
-        plot(test_glm, predMGLM, 
+        predMGLM <- predict(MGLM.cv, newx = x_glm, s = opt.lam.MGLM)
+        plot(y_glm, predMGLM, 
              xlab = "Actual Values", ylab = "Predicted Values", 
              main = "Actual vs Predicted")
         abline(0, 1, col = "black", lty = 2)
