@@ -45,7 +45,7 @@ We aggregate some variables to check likely correlations as to apply high dim te
         data$sqft_diff_15 <- data$sqft_living - data$sqft_living15 # Difference in living area from nearest neighbors
         
         data[2:6] <- scale(data[2:6])
-        data[9:18] <- scale(data[9:18])
+        data[8:18] <- scale(data[8:18])
     
 We create the data matrix X with only the original (cleaned) features to use for gglasso. Y is the true price.
 
