@@ -203,188 +203,197 @@ House size metrics capture highly correlated attributes such as the living area 
 
 ## gglasso code
 
-    library(gglasso)
-
-    cor(X) # check correlations to create groupset_2
-    
-    groupset_1 <- c(1,1,1,1,1,1,2,2,3,3,1,5,6,6,5,5,4)
-
-    groupset_2 <- c(3,3,1,1,3,4,4,4,4,1,1,2,2,2,1,1,3)
-                    #gr1 area: sqft_living, sqft_above, sqft_basement, sqft_living15, sqft_lot, sqft_lot15
-                    #gr2 spatial dim: lat, long, zipcode
-                    #gr3 rooms and age: bedrooms, bathrooms, floors, age
-                    #gr4 quality and features: grade, condition, view, waterfront
-
-
-    fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
-    fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
-
-    coef.mat.1=fit_1$beta
-    coef.mat.2=fit_2$beta
-
-
-    par(mfrow=c(1,2))
-    fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=100, lambda.factor=0.0001)
-    plot(fit.cv.1)
-    
-    fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=100, lambda.factor=0.0001)
-    plot(fit.cv.1)
-
-
-    # lambda choice
-    fit.1.lambda <- gglasso(x=X, y=Y, group=groupset_1, loss='ls',lambda.factor=0.0001)
-    lambda_0_1 <- fit.1.lambda$lambda.1se
-    lambda_1_1 <- fit.1.lambda$lambda.min
-
-    fit.2.lambda <- gglasso(x=X, y=Y, group=groupset_2, loss='ls',lambda.factor=0.0001)
-    lambda_0_2 <- fit.2.lambda$lambda.1se
-    lambda_1_2 <- fit.2.lambda$lambda.min
-
-
-What we plot (gglasso):
-
-
-                # Heatmap
-                image(1:nrow(coef.mat.1), 1:ncol(coef.mat.1), as.matrix(coef.mat.1), 
-                      xlab = "Features", ylab = "Lambda", main = "Coefficient Heatmap: Group Set 1",
-                      col = heat.colors(100))
-                
-                image(1:nrow(coef.mat.2), 1:ncol(coef.mat.2), as.matrix(coef.mat.2), 
-                      xlab = "Features", ylab = "Lambda", main = "Coefficient Heatmap: Group Set 2",
-                      col = heat.colors(100))
-                
-                # Cross-validation plot 
-                plot(fit.cv.1$lambda, fit.cv.1$cvm, type = "b", log = "x",
-                     xlab = "Log(Lambda)", ylab = "Cross-Validation Error",
-                     main = "CV Error: Group Set 1")
-                
-                plot(fit.cv.2$lambda, fit.cv.2$cvm, type = "b", log = "x",
-                     xlab = "Log(Lambda)", ylab = "Cross-Validation Error",
-                     main = "CV Error: Group Set 2")
-                
-                # Lambda Path
-                matplot(log(fit_1$lambda), t(as.matrix(coef.mat.1)), type = "l", 
-                        xlab = "Log(Lambda)", ylab = "Coefficients", 
-                        main = "Coefficient Path: Group Set 1", col = 1:nrow(coef.mat.1), lty = 1)
-                
-                matplot(log(fit_2$lambda), t(as.matrix(coef.mat.2)), type = "l", 
-                        xlab = "Log(Lambda)", ylab = "Coefficients", 
-                        main = "Coefficient Path: Group Set 2", col = 1:nrow(coef.mat.2), lty = 1)
-                
-                # Feature importance
-                importance_1 <- rowSums(abs(as.matrix(coef.mat.1)))
-                barplot(importance_1, main = "Feature Importance: Group Set 1", 
-                        xlab = "Groups", ylab = "Sum of Absolute Coefficients", col = "blue")
-                
-                importance_2 <- rowSums(abs(as.matrix(coef.mat.2)))
-                barplot(importance_2, main = "Feature Importance: Group Set 2", 
-                        xlab = "Groups", ylab = "Sum of Absolute Coefficients", col = "green")
-                
-                # Residuals
-                preds_1 <- predict(fit.cv.1, s = lambda_1_1, X)
-                residuals_1 <- Y - preds_1
-                plot(preds_1, residuals_1, main = "Residual Plot: Group Set 1", 
-                     xlab = "Predicted", ylab = "Residuals", pch = 16, col = "blue")
-                abline(h = 0, col = "red")
-                
-                preds_2 <- predict(fit.cv.2, s = lambda_1_2, X)
-                residuals_2 <- Y - preds_2
-                plot(preds_2, residuals_2, main = "Residual Plot: Group Set 2", 
-                     xlab = "Predicted", ylab = "Residuals", pch = 16, col = "green")
-                abline(h = 0, col = "red")
-
-
-Prediction plots for Neural Network comparison
+        groupset_1 <- c(1,1,1,1,1,1,2,2,3,3,1,5,6,6,5,5,4)
         
-        pred_1_1se <- predict(fit_1, newx = X, s = lambda_0_1)
-        pred_1_min <- predict(fit_1, newx = X, s = lambda_1_1)
+        groupset_2 <- c(3,3,1,1,3,4,4,4,4,1,1,2,2,2,1,1,3)
+                        #gr1 area: sqft_living, sqft_above, sqft_basement, sqft_living15, sqft_lot, sqft_lot15
+                        #gr2 spatial dim: lat, long, zipcode
+                        #gr3 rooms and age: bedrooms, bathrooms, floors, age
+                        #gr4 quality and features: grade, condition, view, waterfront
         
-        pred_2_1se <- predict(fit_2, newx = X, s = lambda_0_2)
-        pred_2_min <- predict(fit_2, newx = X, s = lambda_1_2)
+        
+        fit_1 <- gglasso(x = X, y = Y, group = groupset_1, loss = 'ls')
+        fit_2 <- gglasso(x = X, y = Y, group = groupset_2, loss = 'ls')
+        
+        coef.mat.1=fit_1$beta
+        coef.mat.2=fit_2$beta
+        
+        par(mfrow=c(1,2))
+        
+        fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=100, lambda.factor=0.0001)
+        plot(fit.cv.1)
+        
+        fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=100, lambda.factor=0.0001)
+        plot(fit.cv.1)
+        
 
-
-MSE
-
-                cat("Model 1 - MSE:", mse_1, "R2:", r2_1, "MAE:", mae_1, "\n")
- Model 1 - MSE: 13572908807 R2: -11.50303 MAE: 48891.6 
- 
-                cat("Model 2 - MSE:", mse_2, "R2:", r2_2, "MAE:", mae_2, "\n")
- Model 2 - MSE: 11156390644 R2: -9.27699 MAE: 43118.46 
-
-
----------------------------------------------------
-##### IMPORTAN Edit 
-We just now spotted a big typo error in the code, the group lasso lambdas were not used on the results of cross-validated lasso but on the results of the first gglasso fit, which created all the bad fits of the code.
-The rightly calculated code snippet is the following:
-
+        # lambda choice
+        fit.1.lambda <- gglasso(x=X, y=Y, group=groupset_1, loss='ls',lambda.factor=0.0001)
+        fit.2.lambda <- gglasso(x=X, y=Y, group=groupset_2, loss='ls',lambda.factor=0.0001)
+        
         lambda_0_1 <- fit.cv.1$lambda.1se  # within 1 standard error
         lambda_1_1 <- fit.cv.1$lambda.min  # minimizing the cross-validation error
         lambda_0_2 <- fit.cv.2$lambda.1se
         lambda_1_2 <- fit.cv.2$lambda.min
         
+    
         # preds
         pred_1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
         pred_2_min <- predict(fit.cv.2, newx = X, s = lambda_1_2)
+        
 
-
-Which yield:
-
+        
         mse_1_min <- mean((Y - pred_1_min)^2)
         r2_1_min <- 1 - sum((Y - pred_1_min)^2) / sum((Y - mean(Y))^2)
-
+        
         mse_2_min <- mean((Y - pred_2_min)^2)
         r2_2_min <- 1 - sum((Y - pred_2_min)^2) / sum((Y - mean(Y))^2)
 
+### plots
+
+            fitted1_1se <- predict(fit.cv.1, newx = X, s = lambda_0_1)
+            fitted1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
+
+    plt <- cbind(Y, fitted1_1se, fitted1_min)
+    matplot(
+      plt,
+      main = "Predicted vs Actual",
+      type = 'l',
+      lwd = 2,
+      col = 1:3,  # Color for the lines
+      ylab = "Response Variable",
+      xlab = "Observations"
+    )
+    
+    grid()
+    
+    legend(
+      "topright",
+      legend = c("Actual", "Fitted-1se", "Fitted-min"),
+      col = 1:3,
+      lty = 1:3,  # Line styles
+      lwd = 2,
+      bty = "n"
+    )
+
+            fitted2_1se <- predict(fit.cv.2, newx = X, s = lambda_0_1)
+            fitted2_min <- predict(fit.cv.2, newx = X, s = lambda_1_1)
+
+    plt <- cbind(Y, fitted2_1se, fitted2_min)
+    matplot(
+      plt,
+      main = "Predicted vs Actual",
+      type = 'l',
+      lwd = 2,
+      col = 1:3,  # Color for the lines
+      ylab = "Response Variable",
+      xlab = "Observations"
+    )
+    
+    grid()
+    
+    legend(
+      "topright",
+      legend = c("Actual", "Fitted-1se", "Fitted-min"),
+      col = 1:3,
+      lty = 1:3,  # Line styles
+      lwd = 2,
+      bty = "n"
+    )
 
 
-Plots:
 
-                fitted1_1se <- predict(fit.cv.1, newx = X, s = lambda_0_1)
-                fitted1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
+# GAM
 
-        plt <- cbind(Y, fitted1_1se, fitted1_min)
-        matplot(
-          plt,
-          main = "Predicted vs Actual",
-          type = 'l',
-          lwd = 2,
-          col = 1:3,  # Color for the lines
-          ylab = "Response Variable",
-          xlab = "Observations"
-        )
+        data_gam <- data
         
-        grid()
+        data_gam$waterfront <- as.factor(data_gam$waterfront)
+        data_gam$view <- as.factor(data_gam$view)
+        data_gam$condition <- as.factor(data_gam$condition)
+        data_gam$grade <- as.factor(data_gam$grade)
+        data_gam$zipcode <- as.factor(data_gam$zipcode)
         
-        legend(
-          "topright",
-          legend = c("Actual", "Fitted-1se", "Fitted-min"),
-          col = 1:3,
-          lty = 1:3,  # Line styles
-          lwd = 2,
-          bty = "n"
-        )
+        
+        
+        gam_full <- gam(price ~ ., data = data_gam) # all predictors
+        gam_null <- gam(price ~ 1, data = data_gam) # null model
+        
+        scope <- gam.scope(data_gam[, -1], arg = c("df=2", "df=3", "df=4"))
+        
+        gam_selected <- step.Gam(gam_null, scope = scope, trace = TRUE)
 
-                fitted2_1se <- predict(fit.cv.2, newx = X, s = lambda_0_1)
-                fitted2_min <- predict(fit.cv.2, newx = X, s = lambda_1_1)
 
-        plt <- cbind(Y, fitted2_1se, fitted2_min)
-        matplot(
-          plt,
-          main = "Predicted vs Actual",
-          type = 'l',
-          lwd = 2,
-          col = 1:3,  # Color for the lines
-          ylab = "Response Variable",
-          xlab = "Observations"
-        )
+
+### best model
+                
+                #    gam(formula = price ~ s(bathrooms, df = 4) + s(sqft_living, df = 4) + 
+                #    s(sqft_lot, df = 4) + s(floors, df = 4) + waterfront + view + 
+                #    condition + grade + s(sqft_basement, df = 4) + zipcode + 
+                #    s(lat, df = 4) + s(long, df = 4) + sqft_living15 + s(sqft_lot15, 
+                #    df = 4) + s(age, df = 4) + s(total_sqft, df = 4) + bath_per_bed + 
+                #    s(total_rooms, df = 4) + sqft_diff_15, data = data, trace = FALSE)
+
+
+### GAM results
         
-        grid()
+        Deviance Residuals:
+             Min       1Q   Median       3Q      Max 
+        -2365025   -56686     1803    52102  2598400 
         
-        legend(
-          "topright",
-          legend = c("Actual", "Fitted-1se", "Fitted-min"),
-          col = 1:3,
-          lty = 1:3,  # Line styles
-          lwd = 2,
-          bty = "n"
-        )
+        (Dispersion Parameter for gaussian family taken to be 20566563643)
+        
+            Null Deviance: 2.897908e+15 on 21435 degrees of freedom
+        Residual Deviance: 4.380472e+14 on 21299 degrees of freedom
+        AIC: 570010.5 
+        
+        Number of Local Scoring Iterations: NA 
+        
+        Anova for Parametric Effects
+                                    Df     Sum Sq    Mean Sq    F value    Pr(>F)    
+        s(bathrooms, df = 4)         1 8.0319e+14 8.0319e+14 39053.2306 < 2.2e-16 ***
+        s(sqft_living, df = 4)       1 5.9577e+14 5.9577e+14 28967.8386 < 2.2e-16 ***
+        s(sqft_lot, df = 4)          1 1.5139e+12 1.5139e+12    73.6079 < 2.2e-16 ***
+        s(floors, df = 4)            1 1.3586e+11 1.3586e+11     6.6060 0.0101702 *  
+        waterfront                   1 1.0205e+14 1.0205e+14  4962.1560 < 2.2e-16 ***
+        view                         4 5.7806e+13 1.4452e+13   702.6710 < 2.2e-16 ***
+        condition                    4 1.5844e+13 3.9609e+12   192.5913 < 2.2e-16 ***
+        grade                       11 1.8924e+14 1.7203e+13   836.4770 < 2.2e-16 ***
+        s(sqft_basement, df = 4)     1 3.9841e+12 3.9841e+12   193.7151 < 2.2e-16 ***
+        zipcode                     69 4.7367e+14 6.8648e+12   333.7857 < 2.2e-16 ***
+        s(lat, df = 4)               1 8.4291e+11 8.4291e+11    40.9846 1.566e-10 ***
+        s(long, df = 4)              1 7.3167e+11 7.3167e+11    35.5759 2.492e-09 ***
+        sqft_living15                1 1.6544e+12 1.6544e+12    80.4418 < 2.2e-16 ***
+        s(sqft_lot15, df = 4)        1 2.3513e+11 2.3513e+11    11.4327 0.0007229 ***
+        s(age, df = 4)               1 4.4281e+11 4.4281e+11    21.5306 3.503e-06 ***
+        s(total_sqft, df = 4)        1 3.0901e+11 3.0901e+11    15.0249 0.0001064 ***
+        bath_per_bed                 1 2.0479e+09 2.0479e+09     0.0996 0.7523422    
+        s(total_rooms, df = 4)       1 5.9723e+11 5.9723e+11    29.0388 7.170e-08 ***
+        sqft_diff_15                 1 5.4159e+11 5.4159e+11    26.3333 2.898e-07 ***
+        Residuals                21299 4.3805e+14 2.0567e+10                         
+        ---
+        Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+        
+        Anova for Nonparametric Effects
+                                 Npar Df Npar F     Pr(F)    
+        (Intercept)                                          
+        s(bathrooms, df = 4)           3  22.99 7.438e-15 ***
+        s(sqft_living, df = 4)         3  76.91 < 2.2e-16 ***
+        s(sqft_lot, df = 4)            3  21.60 5.840e-14 ***
+        s(floors, df = 4)              3  24.35 9.992e-16 ***
+        waterfront                                           
+        view                                                 
+        condition                                            
+        grade                                                
+        s(sqft_basement, df = 4)       3  70.34 < 2.2e-16 ***
+        zipcode                                              
+        s(lat, df = 4)                 3  51.48 < 2.2e-16 ***
+        s(long, df = 4)                3  15.16 7.523e-10 ***
+        sqft_living15                                        
+        s(sqft_lot15, df = 4)          3  14.56 1.815e-09 ***
+        s(age, df = 4)                 3  61.05 < 2.2e-16 ***
+        s(total_sqft, df = 4)          3 333.48 < 2.2e-16 ***
+        bath_per_bed                                         
+        s(total_rooms, df = 4)         3  24.54 7.772e-16 ***
+        sqft_diff_15                                         
+        ---
+        Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
