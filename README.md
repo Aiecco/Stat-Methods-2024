@@ -232,25 +232,13 @@ House size metrics capture highly correlated attributes such as the living area 
         lambda_0_2 <- fit.cv.2$lambda.1se
         lambda_1_2 <- fit.cv.2$lambda.min
         
-### plotting and data
+### plotting
 
         par(mfrow=c(1,2))
         
         plot(fit.cv.1)
         plot(fit.cv.1)
-        
-        
-        mse_1_min <- mean((Y - pred_1_min)^2)
-        r2_1_min <- 1 - sum((Y - pred_1_min)^2) / sum((Y - mean(Y))^2)
-        
-        mse_2_min <- mean((Y - pred_2_min)^2)
-        r2_2_min <- 1 - sum((Y - pred_2_min)^2) / sum((Y - mean(Y))^2)
-        
-        mse_1_min
-        mse_2_min
-        r2_1_min
-        r2_2_min
-        
+                
         
         # preds
         fitted1_1se <- predict(fit.cv.1, newx = X, s = lambda_0_1)
@@ -371,7 +359,40 @@ House size metrics capture highly correlated attributes such as the living area 
                 ylab = "Normalized Contribution", 
                 col = "green",
                 ylim = c(0, max(group_contrib_2_norm)))
-            
+
+
+
+### mse and r2
+
+        n <- length(Y) # Number of observations
+        p_1 <- sum(fit.cv.1$glmnet.fit$df[fit.cv.1$lambda == lambda_1_1])
+        p_2 <- sum(fit.cv.2$glmnet.fit$df[fit.cv.2$lambda == lambda_1_2])
+        
+        # Groupset 1
+        mse_1 <- mean((Y - fitted1_min)^2)
+        ss_res_1 <- sum((Y - fitted1_min)^2)
+        ss_tot_1 <- sum((Y - mean(Y))^2)
+        r2_1 <- 1 - (ss_res_1 / ss_tot_1)
+        adj_r2_1 <- 1 - ((1 - r2_1) * (n - 1)) / (n - p_1 - 1)
+        
+        # Groupset 2
+        mse_2 <- mean((Y - fitted2_min)^2)
+        ss_res_2 <- sum((Y - fitted2_min)^2)
+        ss_tot_2 <- sum((Y - mean(Y))^2)
+        r2_2 <- 1 - (ss_res_2 / ss_tot_2)
+        adj_r2_2 <- 1 - ((1 - r2_2) * (n - 1)) / (n - p_2 - 1)
+
+        
+        # output
+        cat("Groupset 1: \n")
+        cat("MSE:", mse_1, "\n")
+        cat("Adjusted R2:", adj_r2_1, "\n\n")
+        
+        cat("Groupset 2: \n")
+        cat("MSE:", mse_2, "\n")
+        cat("Adjusted R2:", adj_r2_2, "\n")
+
+
 
 # GAM
 
