@@ -218,15 +218,11 @@ House size metrics capture highly correlated attributes such as the living area 
         coef.mat.1=fit_1$beta
         coef.mat.2=fit_2$beta
         
-        par(mfrow=c(1,2))
         
         fit.cv.1=cv.gglasso(x=X,y=Y,group=groupset_1, nfolds=100, lambda.factor=0.0001)
-        plot(fit.cv.1)
         
         fit.cv.2=cv.gglasso(x=X,y=Y,group=groupset_2, nfolds=100, lambda.factor=0.0001)
-        plot(fit.cv.1)
         
-
         # lambda choice
         fit.1.lambda <- gglasso(x=X, y=Y, group=groupset_1, loss='ls',lambda.factor=0.0001)
         fit.2.lambda <- gglasso(x=X, y=Y, group=groupset_2, loss='ls',lambda.factor=0.0001)
@@ -236,33 +232,48 @@ House size metrics capture highly correlated attributes such as the living area 
         lambda_0_2 <- fit.cv.2$lambda.1se
         lambda_1_2 <- fit.cv.2$lambda.min
         
-    
-        # preds
-        pred_1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
-        pred_2_min <- predict(fit.cv.2, newx = X, s = lambda_1_2)
-        
+### plotting and data
 
+        par(mfrow=c(1,2))
+        
+        plot(fit.cv.1)
+        plot(fit.cv.1)
+        
         
         mse_1_min <- mean((Y - pred_1_min)^2)
         r2_1_min <- 1 - sum((Y - pred_1_min)^2) / sum((Y - mean(Y))^2)
         
         mse_2_min <- mean((Y - pred_2_min)^2)
         r2_2_min <- 1 - sum((Y - pred_2_min)^2) / sum((Y - mean(Y))^2)
+        
+        mse_1_min
+        mse_2_min
+        r2_1_min
+        r2_2_min
+        
+        
+        # preds
+        fitted1_1se <- predict(fit.cv.1, newx = X, s = lambda_0_1)
+        fitted1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
+        
+        fitted2_1se <- predict(fit.cv.2, newx = X, s = lambda_0_1)
+        fitted2_min <- predict(fit.cv.2, newx = X, s = lambda_1_1)
+        
+        # residuals
+        residuals1_min <- Y - fitted1_min
+        residuals2_min <- Y - fitted2_min
 
-### plots
 
-            fitted1_1se <- predict(fit.cv.1, newx = X, s = lambda_0_1)
-            fitted1_min <- predict(fit.cv.1, newx = X, s = lambda_1_1)
+
+
 
     plt <- cbind(Y, fitted1_1se, fitted1_min)
     matplot(
       plt,
-      main = "Predicted vs Actual",
+      main = "Group Set 1",
       type = 'l',
-      lwd = 2,
+      lwd = 1,
       col = 1:3,  # Color for the lines
-      ylab = "Response Variable",
-      xlab = "Observations"
     )
     
     grid()
@@ -272,22 +283,19 @@ House size metrics capture highly correlated attributes such as the living area 
       legend = c("Actual", "Fitted-1se", "Fitted-min"),
       col = 1:3,
       lty = 1:3,  # Line styles
-      lwd = 2,
+      lwd = 1,
       bty = "n"
     )
 
-            fitted2_1se <- predict(fit.cv.2, newx = X, s = lambda_0_1)
-            fitted2_min <- predict(fit.cv.2, newx = X, s = lambda_1_1)
+
 
     plt <- cbind(Y, fitted2_1se, fitted2_min)
     matplot(
       plt,
-      main = "Predicted vs Actual",
+      main = "Group Set 2",
       type = 'l',
-      lwd = 2,
+      lwd = 1,
       col = 1:3,  # Color for the lines
-      ylab = "Response Variable",
-      xlab = "Observations"
     )
     
     grid()
@@ -297,11 +305,9 @@ House size metrics capture highly correlated attributes such as the living area 
       legend = c("Actual", "Fitted-1se", "Fitted-min"),
       col = 1:3,
       lty = 1:3,  # Line styles
-      lwd = 2,
+      lwd = 1,
       bty = "n"
     )
-
-
 
 # GAM
 
