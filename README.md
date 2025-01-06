@@ -309,6 +309,70 @@ House size metrics capture highly correlated attributes such as the living area 
       bty = "n"
     )
 
+
+
+        # actual vs predicted (min lambda)
+        
+        plot(Y, fitted1_min, 
+             main = "Actual vs Predicted (GroupSet 1)", 
+             xlab = "Actual Y", ylab = "Predicted Y", 
+             pch = 16, col = "black", cex=0.5)
+        abline(0, 1, col = "red", lwd = 2)
+        
+        plot(Y, fitted2_min, 
+             main = "Actual vs Predicted (GroupSet 2)", 
+             xlab = "Actual Y", ylab = "Predicted Y", 
+             pch = 16, col = "black", cex=0.5)
+        abline(0, 1, col = "red", lwd = 2)
+        
+        
+        # residuals vs predicted (min lambda)
+        
+        plot(fitted1_min, residuals1_min, 
+             main = "Residuals vs Predicted (GroupSet 1)", 
+             xlab = "Predicted Y", ylab = "Residuals", 
+             pch = 16, col = "black", cex=0.5)
+        abline(h = 0, col = "red", lwd = 2)
+        
+        plot(fitted2_min, residuals2_min, 
+             main = "Residuals vs Predicted (GroupSet 2)", 
+             xlab = "Predicted Y", ylab = "Residuals", 
+             pch = 16, col = "black", cex=0.5)
+        abline(h = 0, col = "red", lwd = 2)
+
+        
+        # group contribution
+        
+        group_contrib_1 <- sapply(unique(groupset_1), function(g) {
+          sum(abs(coef.mat.1[groupset_1 == g]))
+        })
+        names(group_contrib_1) <- unique(groupset_1)
+        
+        group_contrib_2 <- sapply(unique(groupset_2), function(g) {
+          sum(abs(coef.mat.2[groupset_2 == g]))
+        })
+        names(group_contrib_2) <- unique(groupset_2)
+        
+        # normalize contributions for better comparison
+        group_contrib_1_norm <- group_contrib_1 / sum(group_contrib_1)
+        group_contrib_2_norm <- group_contrib_2 / sum(group_contrib_2)
+        
+        
+        barplot(group_contrib_1_norm, 
+                main = "Group Contributions - Groupset 1", 
+                xlab = "Group", 
+                ylab = "Normalized Contribution", 
+                col = "blue",
+                ylim = c(0, max(group_contrib_1_norm)))
+        
+        barplot(group_contrib_2_norm, 
+                main = "Group Contributions - Groupset 2", 
+                xlab = "Group", 
+                ylab = "Normalized Contribution", 
+                col = "green",
+                ylim = c(0, max(group_contrib_2_norm)))
+            
+
 # GAM
 
         data_gam <- data
