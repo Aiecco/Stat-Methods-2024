@@ -488,3 +488,51 @@ House size metrics capture highly correlated attributes such as the living area 
         sqft_diff_15                                         
         ---
         Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+### metrics 
+
+        gampreds <- predict(best_model, newdata = data_gam)
+        
+        gamres <- data_gam$price - gampreds
+        
+        ss_total <- sum((data_gam$price - mean(data_gam$price))^2)
+        
+        ss_residual <- sum(gamres^2)
+        
+        # metrics
+        mse <- ss_residual / length(data_gam$price)
+        cat("MSE: ", mse, "\n")
+        
+        rsq <- 1 - (ss_residual / ss_total)
+        n <- nrow(data_gam)
+        p <- length(coef(best_model)) - 1  # Excluding intercept
+        adj_rsq <- 1 - ((1 - rsq) * (n - 1)) / (n - p - 1)
+        cat("Adjusted R-squared: ", adj_rsq, "\n")
+
+        MSE:  20475518275 
+        Adjusted R-squared:  0.84781 
+
+
+        # cross-validation (k-fold, k=100)
+        cv_results <- cv.glm(data = data_gam, glmfit = best_model, K = 100)
+        
+        # cross-validation error
+        cat("Cross-validation error: ", cv_results$delta[1], "\n")
+
+
+### plots
+
+        # actual vs predicted
+        plot(data_gam$price, gampreds, main = "Actual vs Predicted",
+             xlab = "Actual Price", ylab = "Predicted Price", pch = 16, col = "black", cex=0.5)
+        abline(a = 0, b = 1, col = "red")
+
+
+        # residuals
+        plot(gampreds, gamres, main = "Residuals vs Predicted",
+     xlab = "Predicted Price", ylab = "Residuals", pch = 16, col = "darkgreen", cex=0.5)
+        abline(h = 0, col = "red")
+        
+        # Histogram of Residuals
+        hist(gamres, main = "Histogram of Residuals", xlab = "Residuals", col = "lightblue", border = "black")
