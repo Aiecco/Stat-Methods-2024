@@ -45,11 +45,7 @@ We explore regression and regularization techniques to predict house prices base
 
 \section{Introduction} \vspace{-7pt}
 In order to approach the dataset, we first think about which models and variables can predict real estate prices in the real world, with the constraint of the set of variables given by the dataset. Since we handle a price prediction regression, a fair comparison of linear and non-linear basic models - be them regularized or not - would be multivariate. Hence, we first carry a synthetic application of the following models: multivariate linear model and multivariate Poisson regression with an $\alpha = 0.5$ Elastic Net.
-
-In order to understand the higher bound of possible model performance on the dataset, we train a deep multi-layer linear perceptron and we regularize it with a simple Lasso.
-Then, we utilise a Group Lasso regression on two sets of groups of variables that we think may be good predictors of house prices in the real world. The first set of groups uses variables that are usually clustered together by real estate professionals when they do house price estimation. The second set of groups uses clusters of highly statistically correlated (Pearson's $r$) variables(Figure \ref{fig:corrmatplot}). Finally, we run a generalized additive model allowing for up to four degrees of freedom on each numerical variable and compare all results.
-
-Selection for regularized models is carried through with cross-validation.
+Then, we utilise a Group Lasso regression on two sets of groups of variables that we think may be good predictors of house prices in the real world. The first set of groups uses variables that are usually clustered together by real estate professionals when they do house price estimation. The second set of groups uses clusters of highly statistically correlated (Pearson's $r$) variables (Figure \ref{fig:corrmatplot}). In order to understand a higher bound of possible model performance on the dataset, we also train a deep multi-layer neural network. Finally, we run a generalized additive model allowing for up to four degrees of freedom on each numerical variable and compare all results.
 
 \section{Dataset} \vspace{-7pt}
 The dataset contains real estate property listings, each described by a variety of attributes. Temporal attributes are: the listing date, the year the property was built, and the year of its last renovation. Physical characteristics are: the number of bedrooms and bathrooms, living area size, total lot size, number of floors, basement area, and living area above ground. Scenic qualities are represented by a waterfront view indicator, a view quality rating, an overall condition rating, and an overall grade rating. Locational data instead include zip code, latitude, and longitude. There is also some additional spatial context given by the average living area and lot sizes of the 15 nearest properties.
@@ -72,7 +68,7 @@ Y=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k+\epsilon
 where:$Y$ is the dependent variable, ($X_1, X_2,\dots,X_k$) are the independent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the coefficients and $\epsilon$ is the error term.\\
 
 \subsubsection*{Experiments}
-In our case of interest we use all the the available variables to estimate the house prices, including the artificial ones. The model explains approximately 69\% of the variability in the response variable (Figure \ref{fig:MLRpred}) with many variables exhibiting \( p \)-values < 0.001 and, notably, {sqft\_living, grade, and waterfront having particularly high coefficients (Table \ref{tab:mlrcoeffs}). Other metrics, along with the plots (Figure \ref{fig:MLR}), tell us that there's some unwanted moderate-scale variability in the predictions.
+In our case of interest we use all the the available variables to estimate the house prices, including the artificial ones. The model explains approximately 69\% of the variability in the response variable (Figure \ref{fig:MLRpred}) with many variables exhibiting \( p \)-values < 0.001 and, notably, sqft\_living, grade, and waterfront having particularly high coefficients (Table \ref{tab:mlrcoeffs}). Other metrics, along with the plots (Figure \ref{fig:MLR}), tell us that there's some unwanted moderate-scale variability in the predictions.
 
 
 \subsection{Multivariate GLM with Elastic Net} \vspace{-3pt}
@@ -164,49 +160,37 @@ We kept the architecture neither too deep nor too shallow (Figure \ref{tab:NN}) 
 \subsection{Mathematical Formulation}
 We finally use a Generalized Additive Model (GAM), an extension of GLMs that allow the relationship between the predictors and the response to be modeled as a sum of smooth, potentially non-linear functions.
 The mathematical formulation of a GAM is as follows:
-
 We assume an additive relationship to extend the basis function:
-
-\[
+\begin{equation}
 f(x) = \sum_{j=1}^p f_j(x_j),
-\]
-
+\end{equation}
 
 Each \( f_j(x_j) \) may be estimated via some scatterplot smoother \( S \), such as regression splines, loess, parametric methods, etc.
 
 The general form of the additive model is:
-
-\[
+\begin{equation}
 y = \beta + \sum_{j=1}^p f_j(x_j) + \phi,
-\]
+\end{equation}
 
 where \( \beta \) is the intercept, and the functions \( f_j(x_j) \) are estimated by the backfitting algorithm.
-
 
 The backfitting algorithm estimates \( f_j(x_j) \) iteratively:
 
 1. Initialize: \( \hat{\beta} = \frac{\sum_{i} y_i}{n}, \hat{f}_j = 0 \).
 2. For each \( j \), update \( \hat{f}_j(x_j) \) using the smoother \( S \):
-
-\[
+\begin{equation}
 \hat{f}_j(x_j) \leftarrow S \left( y - \hat{\beta} - \sum_{k \neq j} \hat{f}_k(x_k) \right).
-\]
-
-
+\end{equation}
 
 The model is fitted by iteratively smoothing:
-
-\[
+\begin{equation}
 y = f_1(x_1) + \cdots + f_p(x_p) + \phi.
-\]
-
+\end{equation}
 Each function \( f_j(x_j) \) is updated in turn, based on the current estimates of the other functions.
 
 
-
-
 \subsection{Experiments}
-The firs result of the model is the distribution of the residuals, which exhibits a large range and confirms the presence of outliers in the data, with the IQR going from $-56,686$ to $52,102$ (Table \ref{tab:gamanova}). The model is good at capturing the variance in the data, although and looking at the local scoring process we see a lack of iterations, which means model convergence with no need of further refinements.
+The first result of the model is the distribution of the residuals, which exhibits a large range and confirms the presence of outliers in the data, with the IQR going from $-56,686$ to $52,102$ (Table \ref{tab:gamanova}). The model is good at capturing the variance in the data, although and looking at the local scoring process we see a lack of iterations, which means model convergence with no need of further refinements.
 
 The ANOVA table for parametric effects shows that most variables have statistically significant effects on price and, surprisingly, baths per bed (previously significant) being the only one not reaching a satisfactory p-value. The ANOVA table for nonparametric effects (Table \ref{tab:gamanovanonparametric}) shows similar results with all variables being important to predict the price.
 
@@ -226,7 +210,7 @@ As shown by the GAM, house prices are not static and respond highly to all sorts
  \vspace{7pt}
 
 \begin{figure}[H]
-\includegraphics[scale=0.7]{eda}
+\includegraphics[scale=0.65]{eda}
 \centering
 \caption{Some simple EDA}
 \label{fig:eda}
@@ -240,7 +224,7 @@ As shown by the GAM, house prices are not static and respond highly to all sorts
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.8]{corrmatplot}
+\includegraphics[scale=0.7]{corrmatplot}
 \centering
 \caption{Correlation matrix to pick groups in the second set of Group Lasso}
 \label{fig:corrmatplot}
@@ -251,7 +235,7 @@ As shown by the GAM, house prices are not static and respond highly to all sorts
 \section{Regressions}
 
 \begin{figure}[H]
-\includegraphics[scale=0.55]{MLRpred}
+\includegraphics[scale=0.5]{MLRpred}
 \centering
 \caption{Linear regression actual vs predicted}
 \label{fig:MLRpred}
@@ -327,7 +311,7 @@ sqft\_diff\_15    & NA          & NA         & NA         & NA             \\
 
 
 \begin{figure}[H]
-\includegraphics[scale=0.5]{gglassopred}
+\includegraphics[scale=0.6]{gglassopred}
 \centering
 \caption{Grouped models predictions}
 \label{fig:gglassopred}
@@ -348,14 +332,14 @@ sqft\_diff\_15    & NA          & NA         & NA         & NA             \\
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.55]{gglassocv}
+\includegraphics[scale=0.65]{gglassocv}
 \centering
 \caption{Cross Validation for Group Lasso}
 \label{fig:gglassocv}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.5]{gglassocontrib}
+\includegraphics[scale=0.55]{gglassocontrib}
 \centering
 \caption{Group contribution for gglasso models}
 \label{fig:gglassocontrib}
@@ -397,14 +381,14 @@ sqft\_diff\_15    & NA          & NA         & NA         & NA             \\
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.4]{gamperf}
+\includegraphics[scale=0.5]{gamperf}
 \centering
 \caption{GAM performance}
 \label{fig:gamperf}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.4]{gam}
+\includegraphics[scale=0.5]{gam}
 \centering
 \caption{GAM/splines: price vs each feature}
 \label{fig:gam}
