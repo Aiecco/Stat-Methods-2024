@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.5)  7 JAN 2025 03:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.5)  7 JAN 2025 12:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -420,8 +420,7 @@ Package: multicol 2024/09/14 v1.9i multicolumn formatting (FMi)
 \mult@nat@firstbox=\box102
 \colbreak@box=\box103
 \mc@col@check@num=\count312
-)
-No file "Tex scratch".aux.
+) (Tex scratch.aux)
 \openout1 = `"Tex scratch.aux"'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 34.
@@ -503,10 +502,12 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 Package hyperref Info: Link coloring OFF on input line 34.
+(Tex scratch.out) (Tex scratch.out)
 \@outlinefile=\write3
 \openout3 = `"Tex scratch.out"'.
 
 LaTeX Font Info:    Trying to load font information for U+msa on input line 37.
+
 
 (C:\Users\PC Gaming\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -517,13 +518,6 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 37.
 (C:\Users\PC Gaming\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-LaTeX Warning: Reference `fig:corrmatplot' on page 1 undefined on input line 50
-.
-
-
-LaTeX Warning: Reference `fig:corrplots' on page 1 undefined on input line 59.
-
 [1
 
 {C:/Users/PC Gaming/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
@@ -537,99 +531,32 @@ Underfull \hbox (badness 10000) in paragraph at lines 72--73
 
  []
 
-
-LaTeX Warning: Reference `fig:MLRpred' on page 2 undefined on input line 75.
-
-
-LaTeX Warning: Reference `tab:mlrcoeffs' on page 2 undefined on input line 75.
-
-
-LaTeX Warning: Reference `fig:MLR' on page 2 undefined on input line 75.
-
 [2]
-
-LaTeX Warning: Reference `fig:MGLMcoefpath' on page 3 undefined on input line 1
-28.
-
-
-LaTeX Warning: Reference `tab:glmcoefs' on page 3 undefined on input line 128.
-
-
-LaTeX Warning: Reference `fig:MGLMcv' on page 3 undefined on input line 128.
-
-
-LaTeX Warning: Reference `fig:MGLMperf' on page 3 undefined on input line 128.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 140--142
 
  []
 
-
-LaTeX Warning: Reference `fig:gglassopred' on page 3 undefined on input line 15
-6.
-
-
-LaTeX Warning: Reference `fig:gglassoperf' on page 3 undefined on input line 15
-6.
-
-
-LaTeX Warning: Reference `fig:gglassocoefpath' on page 3 undefined on input lin
-e 156.
-
-
-LaTeX Warning: Reference `fig:gglassocv' on page 3 undefined on input line 156.
-
-
-
-LaTeX Warning: Reference `fig:gglassocontrib' on page 3 undefined on input line
- 157.
-
 [3]
 
-LaTeX Warning: Reference `tab:gamanova' on page 4 undefined on input line 207.
-
-
-LaTeX Warning: Reference `tab:gamanovanonparametric' on page 4 undefined on inp
-ut line 209.
-
-
-LaTeX Warning: Reference `fig:gamperf' on page 4 undefined on input line 211.
-
-
-LaTeX Warning: Reference `fig:gam' on page 4 undefined on input line 211.
-
-
-LaTeX Warning: Reference `fig:NN' on page 4 undefined on input line 216.
-
-
-LaTeX Warning: Reference `fig:NNpred' on page 4 undefined on input line 216.
-
-
-LaTeX Warning: Reference `fig:traintestloss' on page 4 undefined on input line 
-216.
-
-
-
 [4]
-<./images/eda.png, id=65, 715.17188pt x 574.39594pt>
+<./images/eda.png, id=159, 715.17188pt x 574.39594pt>
 File: ./images/eda.png Graphic file (type png)
 <use ./images/eda.png>
-Package pdftex.def Info: ./images/eda.png  used on input line 231.
+Package pdftex.def Info: ./images/eda.png  used on input line 229.
 (pdftex.def)             Requested size: 500.6169pt x 402.0744pt.
-<./images/corrplots.png, id=66, 558.888pt x 584.78474pt>
+<./images/corrplots.png, id=160, 558.888pt x 584.78474pt>
 File: ./images/corrplots.png Graphic file (type png)
 <use ./images/corrplots.png>
-Package pdftex.def Info: ./images/corrplots.png  used on input line 238.
+Package pdftex.def Info: ./images/corrplots.png  used on input line 236.
 (pdftex.def)             Requested size: 279.44331pt x 292.39165pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<./images/corrmatplot.png, id=67, 462.22687pt x 462.22687pt>
+<./images/corrmatplot.png, id=161, 462.22687pt x 462.22687pt>
 File: ./images/corrmatplot.png Graphic file (type png)
 <use ./images/corrmatplot.png>
-Package pdftex.def Info: ./images/corrmatplot.png  used on input line 245.
+Package pdftex.def Info: ./images/corrmatplot.png  used on input line 243.
 (pdftex.def)             Requested size: 369.782pt x 369.782pt.
 
 
@@ -639,118 +566,108 @@ Overfull \vbox (29.12512pt too high) has occurred while \output is active []
 
 
 [6 <./images/corrplots.png> <./images/corrmatplot.png (PNG copy)>]
-<./images/MLRpred.png, id=82, 579.66562pt x 475.7775pt>
+<./images/MLRpred.png, id=173, 579.66562pt x 475.7775pt>
 File: ./images/MLRpred.png Graphic file (type png)
 <use ./images/MLRpred.png>
-Package pdftex.def Info: ./images/MLRpred.png  used on input line 256.
+Package pdftex.def Info: ./images/MLRpred.png  used on input line 254.
 (pdftex.def)             Requested size: 318.81708pt x 261.67842pt.
-<./images/MLR.png, id=83, 741.52031pt x 584.93532pt>
+<./images/MLR.png, id=174, 741.52031pt x 584.93532pt>
 File: ./images/MLR.png Graphic file (type png)
 <use ./images/MLR.png>
-Package pdftex.def Info: ./images/MLR.png  used on input line 264.
+Package pdftex.def Info: ./images/MLR.png  used on input line 262.
 (pdftex.def)             Requested size: 333.68105pt x 263.21846pt.
-<./images/MGLMcoefpath.png, id=84, 587.94656pt x 475.7775pt>
+<./images/MGLMcoefpath.png, id=175, 587.94656pt x 475.7775pt>
 File: ./images/MGLMcoefpath.png Graphic file (type png)
 <use ./images/MGLMcoefpath.png>
-Package pdftex.def Info: ./images/MGLMcoefpath.png  used on input line 307.
+Package pdftex.def Info: ./images/MGLMcoefpath.png  used on input line 305.
 (pdftex.def)             Requested size: 323.37161pt x 261.67842pt.
 
 
 [7 <./images/MLRpred.png> <./images/MLR.png>]
-<./images/MGLMcv.png, id=95, 577.40718pt x 507.39563pt>
+<./images/MGLMcv.png, id=183, 577.40718pt x 507.39563pt>
 File: ./images/MGLMcv.png Graphic file (type png)
 <use ./images/MGLMcv.png>
-Package pdftex.def Info: ./images/MGLMcv.png  used on input line 314.
+Package pdftex.def Info: ./images/MGLMcv.png  used on input line 312.
 (pdftex.def)             Requested size: 375.31023pt x 329.80325pt.
 
 
 [8 <./images/MGLMcoefpath.png>]
-<./images/MGLMperf.png, id=103, 633.86812pt x 435.12563pt>
+<./images/MGLMperf.png, id=189, 633.86812pt x 435.12563pt>
 File: ./images/MGLMperf.png Graphic file (type png)
 <use ./images/MGLMperf.png>
-Package pdftex.def Info: ./images/MGLMperf.png  used on input line 324.
+Package pdftex.def Info: ./images/MGLMperf.png  used on input line 322.
 (pdftex.def)             Requested size: 412.0094pt x 282.8283pt.
 
 
 [9 <./images/MGLMcv.png>]
-<./images/gglassopred.png, id=111, 860.46469pt x 472.76625pt>
+<./images/gglassopred.png, id=195, 860.46469pt x 472.76625pt>
 File: ./images/gglassopred.png Graphic file (type png)
 <use ./images/gglassopred.png>
-Package pdftex.def Info: ./images/gglassopred.png  used on input line 332.
+Package pdftex.def Info: ./images/gglassopred.png  used on input line 330.
 (pdftex.def)             Requested size: 430.2313pt x 236.38254pt.
-<./images/gglassoperf.png, id=112, 655.69969pt x 578.16pt>
+<./images/gglassoperf.png, id=196, 655.69969pt x 578.16pt>
 File: ./images/gglassoperf.png Graphic file (type png)
 <use ./images/gglassoperf.png>
-Package pdftex.def Info: ./images/gglassoperf.png  used on input line 339.
+Package pdftex.def Info: ./images/gglassoperf.png  used on input line 337.
 (pdftex.def)             Requested size: 426.19975pt x 375.79955pt.
 
 
 [10 <./images/MGLMperf.png> <./images/gglassopred.png>]
-<./images/gglassocoefpath.png, id=121, 869.49844pt x 438.13687pt>
+<./images/gglassocoefpath.png, id=203, 869.49844pt x 438.13687pt>
 File: ./images/gglassocoefpath.png Graphic file (type png)
 <use ./images/gglassocoefpath.png>
-Package pdftex.def Info: ./images/gglassocoefpath.png  used on input line 346.
+Package pdftex.def Info: ./images/gglassocoefpath.png  used on input line 344.
 (pdftex.def)             Requested size: 478.22562pt x 240.97601pt.
-<./images/gglassocv.png, id=122, 744.53156pt x 423.08063pt>
+<./images/gglassocv.png, id=204, 744.53156pt x 423.08063pt>
 File: ./images/gglassocv.png Graphic file (type png)
 <use ./images/gglassocv.png>
-Package pdftex.def Info: ./images/gglassocv.png  used on input line 353.
+Package pdftex.def Info: ./images/gglassocv.png  used on input line 351.
 (pdftex.def)             Requested size: 409.49362pt x 232.69505pt.
 
 
 [11 <./images/gglassoperf.png> <./images/gglassocoefpath.png>]
-<./images/gglassocontrib.png, id=131, 773.13844pt x 463.7325pt>
+<./images/gglassocontrib.png, id=211, 773.13844pt x 463.7325pt>
 File: ./images/gglassocontrib.png Graphic file (type png)
 <use ./images/gglassocontrib.png>
-Package pdftex.def Info: ./images/gglassocontrib.png  used on input line 360.
+Package pdftex.def Info: ./images/gglassocontrib.png  used on input line 358.
 (pdftex.def)             Requested size: 386.56828pt x 231.86568pt.
-<./images/gamperf.png, id=132, 930.47626pt x 434.37282pt>
-File: ./images/gamperf.png Graphic file (type png)
-<use ./images/gamperf.png>
-Package pdftex.def Info: ./images/gamperf.png  used on input line 368.
-(pdftex.def)             Requested size: 372.18391pt x 173.74605pt.
 
 
 [12 <./images/gglassocv.png> <./images/gglassocontrib.png>]
-<./images/gam.png, id=141, 933.4875pt x 1124.2pt>
+<./images/NNpred.png, id=218, 489.9906pt x 395.3169pt>
+File: ./images/NNpred.png Graphic file (type png)
+<use ./images/NNpred.png>
+Package pdftex.def Info: ./images/NNpred.png  used on input line 386.
+(pdftex.def)             Requested size: 342.99107pt x 276.71992pt.
+<./images/traintestloss.png, id=220, 409.7709pt x 323.7696pt>
+File: ./images/traintestloss.png Graphic file (type png)
+<use ./images/traintestloss.png>
+Package pdftex.def Info: ./images/traintestloss.png  used on input line 393.
+(pdftex.def)             Requested size: 307.32742pt x 242.8266pt.
+
+
+[13 <./images/NNpred.png>]
+<./images/gamperf.png, id=228, 930.47626pt x 434.37282pt>
+File: ./images/gamperf.png Graphic file (type png)
+<use ./images/gamperf.png>
+Package pdftex.def Info: ./images/gamperf.png  used on input line 400.
+(pdftex.def)             Requested size: 372.18391pt x 173.74605pt.
+<./images/gam.png, id=229, 933.4875pt x 1124.2pt>
 File: ./images/gam.png Graphic file (type png)
 <use ./images/gam.png>
-Package pdftex.def Info: ./images/gam.png  used on input line 375.
+Package pdftex.def Info: ./images/gam.png  used on input line 407.
 (pdftex.def)             Requested size: 373.38838pt x 449.67204pt.
 
 
-[13 <./images/gamperf.png> <./images/gam.png>]
-<./images/NN.png, id=152, 609.27625pt x 906.38625pt>
-File: ./images/NN.png Graphic file (type png)
-<use ./images/NN.png>
-Package pdftex.def Info: ./images/NN.png  used on input line 439.
-(pdftex.def)             Requested size: 396.02486pt x 589.14409pt.
+[14 <./images/traintestloss.png> <./images/gamperf.png>]
 
+[15 <./images/gam.png>]
 
-[14]
-<./images/NNpred.png, id=159, 400.3758pt x 328.8285pt>
-File: ./images/NNpred.png Graphic file (type png)
-<use ./images/NNpred.png>
-Package pdftex.def Info: ./images/NNpred.png  used on input line 446.
-(pdftex.def)             Requested size: 280.26114pt x 230.17838pt.
-
-
-[15 <./images/NN.png>]
-<./images/traintestloss.png, id=166, 409.7709pt x 328.8285pt>
-File: ./images/traintestloss.png Graphic file (type png)
-<use ./images/traintestloss.png>
-Package pdftex.def Info: ./images/traintestloss.png  used on input line 453.
-(pdftex.def)             Requested size: 307.32742pt x 246.62077pt.
-
-
-[16 <./images/NNpred.png> <./images/traintestloss.png>] (Tex scratch.aux)
+[16] (Tex scratch.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 1
 L3 programming layer <2024-12-09>
  ***********
-
-
-LaTeX Warning: There were undefined references.
 
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
@@ -761,38 +678,47 @@ Package rerunfilecheck Warning: File `"Tex scratch".out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `"Tex scratch".out':
-(rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  942ACB83ADD6308BADA80AB51ED8DAD9;2119.
+(rerunfilecheck)             Before: 942ACB83ADD6308BADA80AB51ED8DAD9;2119
+(rerunfilecheck)             After:  972203840410B7AD4DBE941EDD56AAB2;2119.
  ) 
 Here is how much of TeX's memory you used:
- 11238 strings out of 473576
- 178762 string characters out of 5714341
- 685494 words of memory out of 5000000
- 34218 multiletter control sequences out of 15000+600000
- 566599 words of font info for 68 fonts, out of 8000000 for 9000
+ 11256 strings out of 473576
+ 179058 string characters out of 5714341
+ 686859 words of memory out of 5000000
+ 34227 multiletter control sequences out of 15000+600000
+ 566767 words of font info for 69 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,16n,93p,750b,636s stack positions out of 10000i,1000n,20000p,200000b,200000s
- <C:\Users\PC Gaming\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\
-tcrm1095.pk><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmbx10.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/font
-s/type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/PC Gaming/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/PC Gaming/AppData/
-Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users/P
-C Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pf
-b><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmmi6.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmmi8.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fon
-ts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/PC Gaming/AppData/Local/Program
-s/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/PC Gaming/AppData/L
-ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/PC Gami
-ng/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Us
-ers/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
-fonts/cm/cmsy8.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmtt12.pfb>
-Output written on "Tex scratch.pdf" (16 pages, 608085 bytes).
+ 79i,16n,93p,749b,635s stack positions out of 10000i,1000n,20000p,200000b,200000s
+
+pdfTeX warning (dest): name{subsection.5.2} has been referenced but does not ex
+ist, replaced by a fixed one
+
+
+pdfTeX warning (dest): name{subsection.5.1} has been referenced but does not ex
+ist, replaced by a fixed one
+
+ <C:\Users\PC Gaming\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tc
+rm1095.pk><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmbx10.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/PC Gaming/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/PC Gaming/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cmextra/cmex8.pfb><C:/Users/PC 
+Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+<C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmmi6.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmmi8.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts
+/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/PC Gaming/AppData/Local/Programs/
+MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/PC Gaming/AppData/Loc
+al/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/PC Gaming
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/User
+s/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10
+.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmsy8.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX/fonts/type1/
+public/amsfonts/cm/cmtt10.pfb><C:/Users/PC Gaming/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
+Output written on "Tex scratch.pdf" (16 pages, 589145 bytes).
 PDF statistics:
- 253 PDF objects out of 1000 (max. 8388607)
- 71 named destinations out of 1000 (max. 500000)
- 91 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 330 PDF objects out of 1000 (max. 8388607)
+ 73 named destinations out of 1000 (max. 500000)
+ 214 words of extra memory for PDF output out of 10000 (max. 10000000)
 

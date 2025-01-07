@@ -72,7 +72,7 @@ Y=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k+\epsilon
 where:$Y$ is the dependent variable, ($X_1, X_2,\dots,X_k$) are the independent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the coefficients and $\epsilon$ is the error term.\\
 
 \subsubsection*{Experiments}
-In our case of interest we use all the the available variables to estimate the house prices, including the artificial ones. The model explains approximately 69\% of the variability in the response variable (Figure \ref{fig:MLRpred}) with many variables exhibiting \( p \)-values < 0.001 and, notably, \textbf{sqft\_living}, \textbf{grade}, and \textbf{waterfront} having particularly high coefficients (Table \ref{tab:mlrcoeffs}). Other metrics, along with the plots (Figure \ref{fig:MLR}), tell us that there's some unwanted moderate-scale variability in the predictions.
+In our case of interest we use all the the available variables to estimate the house prices, including the artificial ones. The model explains approximately 69\% of the variability in the response variable (Figure \ref{fig:MLRpred}) with many variables exhibiting \( p \)-values < 0.001 and, notably, {sqft\_living, grade, and waterfront having particularly high coefficients (Table \ref{tab:mlrcoeffs}). Other metrics, along with the plots (Figure \ref{fig:MLR}), tell us that there's some unwanted moderate-scale variability in the predictions.
 
 
 \subsection{Multivariate GLM with Elastic Net} \vspace{-3pt}
@@ -156,11 +156,13 @@ Thus, the optimization problem is: \begin{equation}
 The model performeds almost identically (Figure \ref{fig:gglassopred}, \ref{fig:gglassoperf}), and as well as the linear regression, explaining about 60\% of the variability in price. The coefficient path plot shows one easily regularizable fast-descending line, with the others being fairly constant throught lambda (Figure \ref{fig:gglassocoefpath}), a result which we also see if we extract each group's contribution in explaining price after cross validation: in the cross-validation lambda choice (Figure \ref{fig:gglassocv}), no group was brought to zero, even though there are significant differences in group importance for both models, which also says something about the adjusted R-squared.
 Each set's most contributing group was almost as doubly important as the others (Figure \ref{fig:gglassocontrib}), so it makes sense to mention them: for the first model (real-life modeling) the most important group was group 1, consisting of physical characteristics; bedrooms, bathrooms, lot size and floors. For the second model (inter-correlated features) the most important group was group 4, consisting of house quality measures and extra features; grade, condition, view, waterfront.
 
+\section{Neural Network} \vspace{-7pt}
+We train a deep neural network in order to have an estimate of a good possible result in this context and, most of all, to understand if our choice of models was insufficient.\\
+We kept the architecture neither too deep nor too shallow (Figure \ref{tab:NN}) given the medium number of features. We see very clearly that the network uses the features of the dataset to predict well (Figure \ref{fig:NNpred}) and with no overfitting (Figure \ref{fig:traintestloss}). The goal of this small experiment was also to satiate any doubt about the dataset being "corrupted," and that any model could somehow suffer from problems. Indeed, the with an adjusted \( R^2 \) of \( 0.7805 \), we can say that there's chance of good predicitons, and that the dataset is not corrupted.
 
 \section{Generalized Additive Model}
 \subsection{Mathematical Formulation}
-
-Generalized Additive Models (GAMs) are a flexible class of models that extend GLMs by allowing the relationship between the predictors and the response to be modeled as a sum of smooth, potentially non-linear functions.
+We finally use a Generalized Additive Model (GAM), an extension of GLMs that allow the relationship between the predictors and the response to be modeled as a sum of smooth, potentially non-linear functions.
 The mathematical formulation of a GAM is as follows:
 
 We assume an additive relationship to extend the basis function:
@@ -210,10 +212,6 @@ The ANOVA table for parametric effects shows that most variables have statistica
 
 Zooming out and looking at the model's general performance, we see that this is the most successful model, explaining circa 85\% of the variability in price, and its MSE being less than half of the previous models' MSE (Figure \ref{fig:gamperf}). By looking at the plots, we can notice that even though many features were best fitted with polynomially, most of them still retained linearity (Figure \ref{fig:gam}). We also see that , just like in the other models, there's some heteroskedasticity, with models specifically struggling with very large values of price (which are also rare). 
 
-
-\section{Neural Network} \vspace{-7pt}
-We finally train a deep neural network in order to have an estimate of the best possible result in any linear statistical context and, most of all, to understand if our choice of models was insufficient.\\
-We kept the architecture neither too deep nor too shallow (Figure \ref{fig:NN}) given the medium number of features. We see very clearly that the network uses the features of the dataset to predict extremely well (Figure \ref{fig:NNpred}) and with no overfitting (Figure \ref{fig:traintestloss}). The goal of this small experiment was also to satiate any doubt about the dataset being "corrupted," and that any model could somehow suffer from problems. Indeed, the dataset is not corrupted.
 
 \section{Conclusion} \vspace{-7pt}
 \noindent
@@ -364,6 +362,40 @@ sqft\_diff\_15    & NA          & NA         & NA         & NA             \\
 \end{figure}
 
 
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Layer} & \textbf{Output Shape} & \textbf{Param \#} \\ \hline
+\texttt{HousePriceDNN} & \texttt{[1, 1]} & -- \\ \hline
+\texttt{Linear: 1-1} & \texttt{[1, 256]} & 4,608 \\ \hline
+\texttt{ReLU: 1-2} & \texttt{[1, 256]} & -- \\ \hline
+\texttt{Linear: 1-3} & \texttt{[1, 128]} & 32,896 \\ \hline
+\texttt{ReLU: 1-4} & \texttt{[1, 128]} & -- \\ \hline
+\texttt{Linear: 1-5} & \texttt{[1, 64]} & 8,256 \\ \hline
+\texttt{ReLU: 1-6} & \texttt{[1, 64]} & -- \\ \hline
+\texttt{Linear: 1-7} & \texttt{[1, 32]} & 2,080 \\ \hline
+\texttt{ReLU: 1-8} & \texttt{[1, 32]} & -- \\ \hline
+\texttt{Linear: 1-9} & \texttt{[1, 1]} & 33 \\ \hline
+\end{tabular}
+\caption{Neural Network Architecture}
+\label{tab:NN}
+\end{table}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{NNpred}
+\centering
+\caption{Neural Network actual vs predicted}
+\label{fig:NNpred}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.75]{traintestloss}
+\centering
+\caption{Neural Network training}
+\label{fig:traintestloss}
+\end{figure}
+
 \begin{figure}[H]
 \includegraphics[scale=0.4]{gamperf}
 \centering
@@ -434,27 +466,6 @@ s(total\_rooms, df = 4) & 3 & 24.54 & $7.77 \times 10^{-16}$ *** \\
 \label{tab:gamanovanonparametric}
 \end{table}
 
-
-\begin{figure}[H]
-\includegraphics[scale=0.65]{NN}
-\centering
-\caption{Neural Network architecture}
-\label{fig:NN}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics[scale=0.7]{NNpred}
-\centering
-\caption{Neural Network actual vs predicted}
-\label{fig:NNpred}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics[scale=0.75]{traintestloss}
-\centering
-\caption{Neural Network training}
-\label{fig:traintestloss}
-\end{figure}
 
 
 
