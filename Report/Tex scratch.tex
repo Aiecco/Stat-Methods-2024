@@ -1,4 +1,4 @@
-\documentclass[a4paper, 9pt]{article}
+\documentclass[a4paper, 11pt]{article}
 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -36,22 +36,23 @@
 \maketitle
 \noindent
 \begin{abstract}
- This study explores the use of linear regression, lasso regression, group lasso regression, and a simple neural network to predict house prices based on various features, such as location, size, and the number of rooms. The primary goal is to assess the performance of these models in terms of predictive accuracy, feature selection, and their ability to handle multicollinearity in the dataset.
+We explore regression and regularization techniques to predict house prices based on physical, qualitative, locational, and area features. The best result was achieved with a Generalized Additive Model (GAM), explaining approximately 85\% of the variance. Other methods, including linear regression, Poisson regression with Elastic Net, and Group Lasso, were tested, with similar performance. Results indicate that house prices respond highly and independently to house features, and that such relationship can be both linear or polynomial.
 \end{abstract}
+
 \vspace{5pt}
 
 \begin{multicols}{2}
 
 \section{Introduction} \vspace{-7pt}
-In order to approach the dataset, we first think about which models and variables can predict real estate prices in the real world, with the constraint of the set of variables given by the dataset. Since we handle a price prediction regression, a fair comparison of linear and non-linear basic models - be them regularized or not - would be multivariate. Hence, we first carry a synthetic application of the following models: multivariate linear model and multivariate Poisson regression with an $\alpha = 0.1$ Elastic Net.
+In order to approach the dataset, we first think about which models and variables can predict real estate prices in the real world, with the constraint of the set of variables given by the dataset. Since we handle a price prediction regression, a fair comparison of linear and non-linear basic models - be them regularized or not - would be multivariate. Hence, we first carry a synthetic application of the following models: multivariate linear model and multivariate Poisson regression with an $\alpha = 0.5$ Elastic Net.
 
-We then train a deep Multi-Layer Perceptron for performance comparison and we regularize it with a simple Lasso.
-Finally, we utilise a Group Lasso regression on two sets of groups of variables that we think may be good predictors of house prices in the real world. The first set of groups uses variables that are usually clustered together by real estate professionals when they do house price estimation. The second set of groups uses clusters of highly statistically correlated (Pearson's $r$) variables.(Figure \ref{fig:corrmatplot})
+In order to understand the higher bound of possible model performance on the dataset, we train a deep multi-layer linear perceptron and we regularize it with a simple Lasso.
+Then, we utilise a Group Lasso regression on two sets of groups of variables that we think may be good predictors of house prices in the real world. The first set of groups uses variables that are usually clustered together by real estate professionals when they do house price estimation. The second set of groups uses clusters of highly statistically correlated (Pearson's $r$) variables(Figure \ref{fig:corrmatplot}). Finally, we run a generalized additive model allowing for up to four degrees of freedom on each numerical variable and compare all results.
 
-All selection for regularized models is carried through with cross-validation.
+Selection for regularized models is carried through with cross-validation.
 
 \section{Dataset} \vspace{-7pt}
-The dataset contains real estate property listings, each described by a variety of attributes. Temporal attributes are: the listing date, the year the property was built, and the year of its last renovation. Physical characteristics are: the number of bedrooms and bathrooms, living area size, total lot size, number of floors, basement area, and living area above ground. Scenic qualities are represented by a waterfront view indicator, a view quality rating, an overall condition rating, and an overall grade rating. Locational data instead include zip code,  latitude, and longitude. There is also some additional spatial context given by the average living area and lot sizes of the 15 nearest properties.
+The dataset contains real estate property listings, each described by a variety of attributes. Temporal attributes are: the listing date, the year the property was built, and the year of its last renovation. Physical characteristics are: the number of bedrooms and bathrooms, living area size, total lot size, number of floors, basement area, and living area above ground. Scenic qualities are represented by a waterfront view indicator, a view quality rating, an overall condition rating, and an overall grade rating. Locational data instead include zip code, latitude, and longitude. There is also some additional spatial context given by the average living area and lot sizes of the 15 nearest properties.
 
 \subsection{Pre-processing} \vspace{-3pt}
 In order to pre-process the data, we first convert the date column into a proper date object by extracting the first 8 characters (in "YYYYMMDD" format). We then replace 0 values in the "yr{\_}renovated" column with NA, treating them as missing data. Duplicate rows are removed based on the id column.
@@ -69,10 +70,9 @@ Y=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k+\epsilon
 \end{equation}
 
 where:$Y$ is the dependent variable, ($X_1, X_2,\dots,X_k$) are the independent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the coefficients and $\epsilon$ is the error term.\\
+
 \subsubsection*{Experiments}
-In our case of interest we use all the the available variables to estimate the house prices(Table \ref{tab:mlrcoeffs})(Figure \ref{fig:MLR}).\\
-Among our predictors we find that only the intercept and the coefficient for bedrooms are statistically significant at the 0.001 level, with p-values less than 2e-16. Other predictors like bathrooms, sqft$\_$living, and sqft{\_}lot have high p-values, hence not statistically significant. The zipcode has been omitted because of singularity, meaning either multicollinearity or redundancy. The residual standard error of the model at 6.15e-09 is very low and in general the residuals are also very small, ranging from -7.36e-07 to 1.38e-09. The F-statistic is astronomically large at 4.788e+30.\\
-This multivariate regression is "perfect", given that the adjusted R-squared values are 1, with predictors explaining all the variability in the response variable. This is clearly a case of overfitting, which we need to handle with regularization. \ref{fig:corrplots}
+In our case of interest we use all the the available variables to estimate the house prices, including the artificial ones. The model explains approximately 69\% of the variability in the response variable (Figure \ref{fig:MLRpred}) with many variables exhibiting \( p \)-values < 0.001 and, notably, \textbf{sqft\_living}, \textbf{grade}, and \textbf{waterfront} having particularly high coefficients (Table \ref{tab:mlrcoeffs}). Other metrics, along with the plots (Figure \ref{fig:MLR}), tell us that there's some unwanted moderate-scale variability in the predictions.
 
 
 \subsection{Multivariate GLM with Elastic Net} \vspace{-3pt}
@@ -89,18 +89,23 @@ The model is expressed as:
 \begin{equation}
 \log(\lambda_i)=\beta_0+\beta_1X_1+\beta_2X_2+\dots+\beta_kX_k
 \end{equation}
-where: ($X_1, X_2,\dots,X_k$) are the indipendent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the regression coefficients
+where: ($X_1, X_2,\dots,X_k$) are the indipendent variables, $\beta_0$ is the intercept, ($\beta_1,\beta_2, \dots, \beta_k$) are the regression coefficients.
+
 \subsubsection*{Elastic Net}
-In regular linear regression or GLMs, the model can overfit the data if there are many predictors, especially when some predictors are irrelevant or highly correlated, but it can also use some sparsity enforcement, so we applied an Elastic Net regression. This kind of regularization combines $L_1$ and $L_2$ regularizations and applies penalty to coefficients as to: 
+In regular linear regression or GLMs, the model can overfit the data if there are many predictors, especially when some predictors are irrelevant or highly correlated, but it can also use some sparsity enforcement, so we applied an Elastic Net regression. This kind of regularization combines $L_1$ and $L_2$ regularizations and applies a penalty to coefficients as to:
 \begin{itemize}
-\item Lasso ($L_1$1): Shrink some coefficients to zero, performing feature selection.(Figure \ref{fig:MGLM})
-\item Ridge ($L_2$): Shrink the coefficients (but not set them to zero) helping with multicollinearity, which our dataset suffers from.
+    \item Lasso ($L_1$): Shrink some coefficients to
+    zero, performing feature selection (Figure 4).
+    \item Ridge ($L_2$): Shrink the coefficients (but
+    not set them to zero) helping with multi-
+    collinearity, which our dataset suffers from.
 \end{itemize}
 Mathematically, the Elastic Net penalty is given by:
 \begin{equation}
 \text{Penalty}= \gamma \left[\alpha \sum_{j=1}^k|\beta_j| + \frac{1}{2}(1-\alpha)\sum_{j=1}^k\beta_{j}^{2} \right]
 \end{equation} 
-where $\gamma$ controls the strength of the regularization (larger $\gamma$ means more regularization), $\alpha$ controls the balance between Lasso and Ridge. If $\alpha=1$, the penalty is purely Lasso; if $\alpha=0$, the penalty is purely Ridge, meaning our $\alpha = 0.1$ choice mostly applies an $L_2$ penalty. We chose this hyperparameter after some experiments that suggested that even a very small Lasso penalty enforced sparsity efficiently.
+where $\gamma$ controls the strength of the regularization (larger $\gamma$ means more regularization), and $\alpha$ controls the balance between Lasso and Ridge.
+
 \subsubsection*{Poisson Regression with Elastic Net}
 When you combine Poisson regression with Elastic Net regularization the model becomes:
 \begin{equation}
@@ -111,11 +116,17 @@ When you combine Poisson regression with Elastic Net regularization the model be
 \end{equation}
 This means that the objective is to minimize the following loss function:
 \begin{equation*}
-\text{Loss}=\sum_{i=1}^n(-Y_i \log(\lambda_i)+ \lambda_i)+ \gamma \left[\alpha \sum_{j=1}^k|\beta_j| + \frac{1}{2}(1-\alpha)\sum_{j=1}^k\beta_{j}^{2} \right]
+\text{Loss} = \sum_{i=1}^n \left( -Y_i \log(\lambda_i) + \lambda_i \right) +
 \end{equation*}
 
+\begin{equation*}
++ \gamma \left[ \alpha \sum_{j=1}^k |\beta_j| + \frac{1}{2}(1-\alpha) \sum_{j=1}^k \beta_{j}^{2} \right]
+\end{equation*}
+
+
 \subsubsection*{Experiments}
-The Poisson regression model(Table \ref{tab:glmcoeffs})output shows that the intercept is 540,529.7, which means that when all the predictors are zero, the dependent variable has a high baseline value. The coefficient for Bedrooms is 356,970.6, which means that with every additional bedroom, the expected value of the outcome increases significantly, holding other factors constant. However, many other factors like Bathrooms, Sqft$\_$Living, Sqft$\_$Lot, Floors, etc., have missing coefficients, represented by periods, and most likely because these variables were excluded from the model, had no significant relationship with the result(Figure \ref{fig:MGLMcv}). A simple analysis of actual target values compared to predicted values shows that the model is very successful at predicting while not overfitting the data since the presence of Elastic Net regularization.(Figure \ref{fig:MGLMpred})
+The Poisson regression model had a smooth regularization (Figure \ref{fig:MGLMcoefpath}) and successfully performed variable selection (Table \ref{tab:glmcoefs}) with a relatively normal-looking cross validation plot which resulted in a very large best-lambda value (Figure \ref{fig:MGLMcv}). However, this model's performance was slightly lower than the linear model, explaining 67.5\% of the variance, which means either a wrong distributional assumption or linearity in the relationship in the data (Figure \ref{fig:MGLMperf}). 
+
 
 \section{Group Lasso} \vspace{-7pt}
 The Group Lasso is an extension of the classical Lasso method applied for regularization and variable selection designed to work with grouped variables, and such a situation is helpful when given variables naturally fall into groups, and we want to choose or discard entire groups of variables simultaneously rather than choosing or dropping individual variables.
@@ -142,16 +153,71 @@ Thus, the optimization problem is: \begin{equation}
 \end{equation}
 
 \subsection{Experiments} \vspace{-3pt}
+The model performeds almost identically (Figure \ref{fig:gglassopred}, \ref{fig:gglassoperf}), and as well as the linear regression, explaining about 60\% of the variability in price. The coefficient path plot shows one easily regularizable fast-descending line, with the others being fairly constant throught lambda (Figure \ref{fig:gglassocoefpath}), a result which we also see if we extract each group's contribution in explaining price after cross validation: in the cross-validation lambda choice (Figure \ref{fig:gglassocv}), no group was brought to zero, even though there are significant differences in group importance for both models, which also says something about the adjusted R-squared.
+Each set's most contributing group was almost as doubly important as the others (Figure \ref{fig:gglassocontrib}), so it makes sense to mention them: for the first model (real-life modeling) the most important group was group 1, consisting of physical characteristics; bedrooms, bathrooms, lot size and floors. For the second model (inter-correlated features) the most important group was group 4, consisting of house quality measures and extra features; grade, condition, view, waterfront.
 
-Anyway, even with this more complex model, the most important variables predicting the prices were the same as before, surely some minor correlation rise up, but not so strong to be considered meaningful for our purposes. (Figure \ref{fig:gglassocoefpath})(Figure \ref{fig:gglassoheat})(Figure \ref{fig:gglassocv})(Figure \ref{fig:gglassofeatures})(Figure \ref{fig:gglassocverror})(Figure \ref{fig:gglasso1pred})(Figure \ref{fig:gglasso2pred})
+
+\section{Generalized Additive Model}
+\subsection{Mathematical Formulation}
+
+Generalized Additive Models (GAMs) are a flexible class of models that extend GLMs by allowing the relationship between the predictors and the response to be modeled as a sum of smooth, potentially non-linear functions.
+The mathematical formulation of a GAM is as follows:
+
+We assume an additive relationship to extend the basis function:
+
+\[
+f(x) = \sum_{j=1}^p f_j(x_j),
+\]
+
+
+Each \( f_j(x_j) \) may be estimated via some scatterplot smoother \( S \), such as regression splines, loess, parametric methods, etc.
+
+The general form of the additive model is:
+
+\[
+y = \beta + \sum_{j=1}^p f_j(x_j) + \phi,
+\]
+
+where \( \beta \) is the intercept, and the functions \( f_j(x_j) \) are estimated by the backfitting algorithm.
+
+
+The backfitting algorithm estimates \( f_j(x_j) \) iteratively:
+
+1. Initialize: \( \hat{\beta} = \frac{\sum_{i} y_i}{n}, \hat{f}_j = 0 \).
+2. For each \( j \), update \( \hat{f}_j(x_j) \) using the smoother \( S \):
+
+\[
+\hat{f}_j(x_j) \leftarrow S \left( y - \hat{\beta} - \sum_{k \neq j} \hat{f}_k(x_k) \right).
+\]
+
+
+
+The model is fitted by iteratively smoothing:
+
+\[
+y = f_1(x_1) + \cdots + f_p(x_p) + \phi.
+\]
+
+Each function \( f_j(x_j) \) is updated in turn, based on the current estimates of the other functions.
+
+
+
+
+\subsection{Experiments}
+The firs result of the model is the distribution of the residuals, which exhibits a large range and confirms the presence of outliers in the data, with the IQR going from $-56,686$ to $52,102$ (Table \ref{tab:gamanova}). The model is good at capturing the variance in the data, although and looking at the local scoring process we see a lack of iterations, which means model convergence with no need of further refinements.
+
+The ANOVA table for parametric effects shows that most variables have statistically significant effects on price and, surprisingly, baths per bed (previously significant) being the only one not reaching a satisfactory p-value. The ANOVA table for nonparametric effects (Table \ref{tab:gamanovanonparametric}) shows similar results with all variables being important to predict the price.
+
+Zooming out and looking at the model's general performance, we see that this is the most successful model, explaining circa 85\% of the variability in price, and its MSE being less than half of the previous models' MSE (Figure \ref{fig:gamperf}). By looking at the plots, we can notice that even though many features were best fitted with polynomially, most of them still retained linearity (Figure \ref{fig:gam}). We also see that , just like in the other models, there's some heteroskedasticity, with models specifically struggling with very large values of price (which are also rare). 
+
 
 \section{Neural Network} \vspace{-7pt}
-We finally train a deep neural network in order to check which could be the best possible result in any statistical context and if our model choice was insufficient.\\
-The architecture is kept neither too deep nor too shallow given the medium number of features. We see very clearly that the network can use the features of the dataset to predict extremely well. The goal of this small experiment was to satiate any doubt about the dataset being corrupted, and that any model could somehow suffer from problems. Indeed, the dataset is not corrupted, but simply seems to (counterintuitively, with respect to the context) present only one feature out of many with actual predictive power.(Figure \ref{fig:NNpred})(Figure \ref{fig:NN})(Figure \ref{fig:traintestloss})(Table \ref{tab:nn})
+We finally train a deep neural network in order to have an estimate of the best possible result in any linear statistical context and, most of all, to understand if our choice of models was insufficient.\\
+We kept the architecture neither too deep nor too shallow (Figure \ref{fig:NN}) given the medium number of features. We see very clearly that the network uses the features of the dataset to predict extremely well (Figure \ref{fig:NNpred}) and with no overfitting (Figure \ref{fig:traintestloss}). The goal of this small experiment was also to satiate any doubt about the dataset being "corrupted," and that any model could somehow suffer from problems. Indeed, the dataset is not corrupted.
 
 \section{Conclusion} \vspace{-7pt}
 \noindent
-
+As shown by the GAM, house prices are not static and respond highly to all sorts of house features, both physical, such as the number of bedrooms or the square feet of the living area, and locational, such as the zipcode or the neighborhood quality. Grouping such features either by mimicking real life statistical groups or according to their inter-correlation did not produce better results than simple models. The latter, if compared to the GAM, seem to highlight that they ignore some variables because they don't capture more complex nonlinear effects, captured instead by the GAM. 
 \end{multicols}
 
 
@@ -159,8 +225,17 @@ The architecture is kept neither too deep nor too shallow given the medium numbe
 \appendix
 
 \section{Visualization}
+ \vspace{7pt}
+
+\begin{figure}[H]
+\includegraphics[scale=0.7]{eda}
+\centering
+\caption{Some simple EDA}
+\label{fig:eda}
+\end{figure}
+
 \begin{figure}[h]
-\includegraphics[scale=0.6]{corrplots}
+\includegraphics[scale=0.5]{corrplots}
 \centering
 \caption{How price behaves with aggregated variables}
 \label{fig:corrplots}
@@ -174,13 +249,24 @@ The architecture is kept neither too deep nor too shallow given the medium numbe
 \end{figure}
 
 
+
 \section{Regressions}
+
 \begin{figure}[H]
-\includegraphics[scale=0.9]{MLR}
+\includegraphics[scale=0.55]{MLRpred}
+\centering
+\caption{Linear regression actual vs predicted}
+\label{fig:MLRpred}
+\end{figure}
+
+
+\begin{figure}[H]
+\includegraphics[scale=0.45]{MLR}
 \centering
 \caption{Multivariate linear regression plot}
 \label{fig:MLR}
 \end{figure}
+
 
 \begin{table}[ht]
 \centering
@@ -188,24 +274,28 @@ The architecture is kept neither too deep nor too shallow given the medium numbe
 \hline
 \textbf{Variable} & \textbf{Estimate} & \textbf{Std. Error} & \textbf{t value} & \textbf{p value} \\
 \hline
-(Intercept)       & 5.405e+05   & 4.201e-11  & 1.287e+16  & $<$ 2e-16 ***  \\
-bedrooms          & 3.677e+05   & 7.398e-11  & 4.970e+15  & $<$ 2e-16 ***  \\
-bathrooms         & 7.485e-11   & 5.423e-11  & 1.380e+00  & 0.168        \\
-sqft$\_$living       & 3.946e-11   & 7.260e-11  & 5.440e-01  & 0.587        \\
-sqft$\_$lot          & -1.557e-10  & 1.267e-10  & -1.229e+00 & 0.219        \\
-floors            & 7.671e-12   & 6.084e-11  & 1.260e-01  & 0.900        \\
-waterfront        & -1.241e-11  & 5.815e-11  & -2.130e-01 & 0.831        \\
-view              & -6.033e-12  & 4.719e-11  & -1.280e-01 & 0.898        \\
-condition         & 1.576e-11   & 5.097e-11  & 3.090e-01  & 0.757        \\
-grade             & 3.389e-11   & 4.487e-11  & 7.550e-01  & 0.450        \\
-sqft$\_$above        & 7.269e-11   & 7.782e-11  & 9.340e-01  & 0.350        \\
-sqft$\_$basement     & -4.531e-11  & 1.110e-10  & -4.080e-01 & 0.683        \\
-zipcode           & NA          & NA         & NA         & NA           \\
-lat               & -6.270e-11  & 5.391e-11  & -1.163e+00 & 0.245        \\
-long              & -2.108e-11  & 4.867e-11  & -4.330e-01 & 0.665        \\
-sqft$\_$living15     & -1.568e-13  & 5.590e-11  & -3.000e-03 & 0.998        \\
-sqft$\_$lot15        & 5.429e-11   & 7.241e-11  & 7.500e-01  & 0.453        \\
-age               & 5.543e-12   & 6.138e-11  & 9.000e-02  & 0.928        \\
+(Intercept)       & $5.359 \times 10^{5}$  & $1.402 \times 10^{3}$  & $3.821 \times 10^{2}$  & $< 2 \times 10^{-16}$ ***  \\
+bedrooms          & $-2.994 \times 10^{4}$ & $1.819 \times 10^{3}$  & $-1.647 \times 10^{1}$ & $< 2 \times 10^{-16}$ ***  \\
+bathrooms         & $1.461 \times 10^{4}$  & $2.845 \times 10^{3}$  & $5.134 \times 10^{0}$  & $2.87 \times 10^{-7}$ ***   \\
+sqft\_living      & $1.471 \times 10^{5}$  & $4.093 \times 10^{3}$  & $3.594 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+sqft\_lot         & $5.957 \times 10^{3}$  & $2.023 \times 10^{3}$  & $2.945 \times 10^{0}$  & $3.23 \times 10^{-3}$ **    \\
+floors            & $3.164 \times 10^{3}$  & $1.995 \times 10^{3}$  & $1.586 \times 10^{0}$  & 0.113          \\
+waterfront        & $6.047 \times 10^{5}$  & $1.763 \times 10^{4}$  & $3.430 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+view              & $4.406 \times 10^{4}$  & $1.668 \times 10^{3}$  & $2.641 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+condition         & $1.827 \times 10^{4}$  & $1.570 \times 10^{3}$  & $1.164 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+grade             & $1.073 \times 10^{5}$  & $2.572 \times 10^{3}$  & $4.174 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+sqft\_above       & $1.900 \times 10^{4}$  & $3.712 \times 10^{3}$  & $5.119 \times 10^{0}$  & $3.10 \times 10^{-7}$ ***   \\
+sqft\_basement    & NA          & NA         & NA         & NA             \\
+zipcode           & $-2.920 \times 10^{4}$ & $1.798 \times 10^{3}$  & $-1.624 \times 10^{1}$ & $< 2 \times 10^{-16}$ ***  \\
+lat               & $8.648 \times 10^{4}$  & $1.514 \times 10^{3}$  & $5.712 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+long              & $-3.515 \times 10^{4}$ & $1.878 \times 10^{3}$  & $-1.871 \times 10^{1}$ & $< 2 \times 10^{-16}$ ***  \\
+sqft\_living15    & $1.092 \times 10^{4}$  & $2.408 \times 10^{3}$  & $4.535 \times 10^{0}$  & $5.80 \times 10^{-6}$ ***   \\
+sqft\_lot15       & $-1.011 \times 10^{4}$ & $2.039 \times 10^{3}$  & $-4.957 \times 10^{0}$ & $7.23 \times 10^{-7}$ ***   \\
+age               & $5.985 \times 10^{4}$  & $2.105 \times 10^{3}$  & $2.844 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+total\_sqft       & NA          & NA         & NA         & NA             \\
+bath\_per\_bed    & $2.120 \times 10^{4}$  & $1.931 \times 10^{3}$  & $1.098 \times 10^{1}$  & $< 2 \times 10^{-16}$ ***  \\
+total\_rooms      & NA          & NA         & NA         & NA             \\
+sqft\_diff\_15    & NA          & NA         & NA         & NA             \\
 \hline
 \end{tabular}
 \caption{Multivariate Linear Regression Data Summary}
@@ -214,99 +304,136 @@ age               & 5.543e-12   & 6.138e-11  & 9.000e-02  & 0.928        \\
 
 
 \begin{figure}[H]
-\includegraphics[scale=0.9]{MGLM}
+\includegraphics[scale=0.55]{MGLMcoefpath}
 \centering
 \caption{Multivariate Poisson regression coefficient path}
-\label{fig:MGLM}
+\label{fig:MGLMcoefpath}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.8]{MGLMcv}
+\includegraphics[scale=0.65]{MGLMcv}
 \centering
 \caption{Cross validation plot for Poisson regression}
 \label{fig:MGLMcv}
 \end{figure}
 
 
-\begin{table}[ht]
-\centering
-\begin{tabular}{|l | r|}
-\hline
-\textbf{Variable} & \textbf{Coefficient} \\
-\hline
-Intercept     & 540529.7 \\
-Bedrooms      & 356970.6 \\
-Bathrooms     & . \\
-Sqft\_Living   & . \\
-Sqft\_Lot      & . \\
-Floors        & . \\
-Waterfront    & . \\
-View          & . \\
-Condition     & . \\
-Grade         & . \\
-Sqft\_Above    & . \\
-Sqft\_Basement & . \\
-Zipcode       & . \\
-Lat           & . \\
-Long          & . \\
-Sqft\_Living15 & . \\
-Sqft\_Lot15    & . \\
-Age           & . \\
-\hline
-\end{tabular}
-\caption{Coefficients from the Poisson model}
-\label{tab:glmcoefs}
-\end{table}
+\begin{table}[ht] \centering \begin{tabular}{|l | r|} \hline \textbf{Variable} & \textbf{Coefficient} \\ \hline Intercept & 536525.639 \\ Bedrooms & -1009.958 \\ Bathrooms & . \\ Sqft\_Living & 145781.906 \\ Sqft\_Lot & . \\ Floors & . \\ Waterfront & 526574.268 \\ View & 40996.640 \\ Condition & 11319.671 \\ Grade & 109439.811 \\ Sqft\_Above & . \\ Sqft\_Basement & . \\ Zipcode & . \\ Lat & 74933.499 \\ Long & -11647.660 \\ Sqft\_Living15 & 6652.210 \\ Sqft\_Lot15 & . \\ Age & 38344.499 \\ \hline \end{tabular} \caption{Coefficients from the Poisson model} \label{tab:glmcoefs} \end{table}
 
 \begin{figure}[H]
-\includegraphics[scale=0.65]{MGLMpred}
+\includegraphics[scale=0.65]{MGLMperf}
 \centering
-\caption{Poisson regression actual vs predicted}
-\label{fig:MGLMpred}
+\caption{Poisson regression performance}
+\label{fig:MGLMperf}
+\end{figure}
+
+
+\begin{figure}[H]
+\includegraphics[scale=0.5]{gglassopred}
+\centering
+\caption{Grouped models predictions}
+\label{fig:gglassopred}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.9]{gglassobasic}
+\includegraphics[scale=0.65]{gglassoperf}
 \centering
-\caption{Group sets comparison for Group Lasso}
-\label{fig:MGLMpred}
+\caption{Grouped models performances(only min lambda)}
+\label{fig:gglassoperf}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.7]{gglassocoefpath}
+\includegraphics[scale=0.55]{gglassocoefpath}
 \centering
 \caption{Coefficient path for Group Lasso}
 \label{fig:gglassocoefpath}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.8]{gglassofeatures}
+\includegraphics[scale=0.55]{gglassocv}
 \centering
-\caption{Best features for each group set for Group Lasso}
-\label{fig:gglassofeatures}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics[scale=0.8]{gglassoheat}
-\centering
-\caption{Feature heatmap for Group Lasso}
-\label{fig:gglassoheat}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics[scale=0.85]{gglassocv}
-\centering
-\caption{Cross validation plot for Group Lasso}
+\caption{Cross Validation for Group Lasso}
 \label{fig:gglassocv}
-
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.85]{gglassocverror}
+\includegraphics[scale=0.5]{gglassocontrib}
 \centering
-\caption{Cross validation error for Group Lasso}
-\label{fig:gglassocverror}
+\caption{Group contribution for gglasso models}
+\label{fig:gglassocontrib}
 \end{figure}
+
+
+\begin{figure}[H]
+\includegraphics[scale=0.4]{gamperf}
+\centering
+\caption{GAM performance}
+\label{fig:gamperf}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.4]{gam}
+\centering
+\caption{GAM/splines: price vs each feature}
+\label{fig:gam}
+\end{figure}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|r|r|r|r|l|}
+\hline
+\textbf{Variable} & \textbf{Df} & \textbf{Sum Sq} & \textbf{Mean Sq} & \textbf{F value} & \textbf{P($>$F)} \\
+\hline
+s(bathrooms, df = 4) & 1 & $8.03 \times 10^{14}$ & $8.03 \times 10^{14}$ & 39053.23 & $< 2.2 \times 10^{-16}$ *** \\
+s(sqft\_living, df = 4) & 1 & $5.96 \times 10^{14}$ & $5.96 \times 10^{14}$ & 28967.84 & $< 2.2 \times 10^{-16}$ *** \\
+s(sqft\_lot, df = 4) & 1 & $1.51 \times 10^{12}$ & $1.51 \times 10^{12}$ & 73.61 & $< 2.2 \times 10^{-16}$ *** \\
+s(floors, df = 4) & 1 & $1.36 \times 10^{11}$ & $1.36 \times 10^{11}$ & 6.61 & 0.0102 * \\
+waterfront & 1 & $1.02 \times 10^{14}$ & $1.02 \times 10^{14}$ & 4962.16 & $< 2.2 \times 10^{-16}$ *** \\
+view & 4 & $5.78 \times 10^{13}$ & $1.45 \times 10^{13}$ & 702.67 & $< 2.2 \times 10^{-16}$ *** \\
+condition & 4 & $1.58 \times 10^{13}$ & $3.96 \times 10^{12}$ & 192.59 & $< 2.2 \times 10^{-16}$ *** \\
+grade & 11 & $1.89 \times 10^{14}$ & $1.72 \times 10^{13}$ & 836.48 & $< 2.2 \times 10^{-16}$ *** \\
+s(sqft\_basement, df = 4) & 1 & $3.98 \times 10^{12}$ & $3.98 \times 10^{12}$ & 193.72 & $< 2.2 \times 10^{-16}$ *** \\
+zipcode & 69 & $4.74 \times 10^{14}$ & $6.86 \times 10^{12}$ & 333.79 & $< 2.2 \times 10^{-16}$ *** \\
+s(lat, df = 4) & 1 & $8.43 \times 10^{11}$ & $8.43 \times 10^{11}$ & 40.98 & $1.57 \times 10^{-10}$ *** \\
+s(long, df = 4) & 1 & $7.32 \times 10^{11}$ & $7.32 \times 10^{11}$ & 35.58 & $2.49 \times 10^{-9}$ *** \\
+sqft\_living15 & 1 & $1.65 \times 10^{12}$ & $1.65 \times 10^{12}$ & 80.44 & $< 2.2 \times 10^{-16}$ *** \\
+s(sqft\_lot15, df = 4) & 1 & $2.35 \times 10^{11}$ & $2.35 \times 10^{11}$ & 11.43 & 0.0007 *** \\
+s(age, df = 4) & 1 & $4.43 \times 10^{11}$ & $4.43 \times 10^{11}$ & 21.53 & $3.50 \times 10^{-6}$ *** \\
+s(total\_sqft, df = 4) & 1 & $3.09 \times 10^{11}$ & $3.09 \times 10^{11}$ & 15.02 & $1.06 \times 10^{-4}$ *** \\
+bath\_per\_bed & 1 & $2.05 \times 10^{9}$ & $2.05 \times 10^{9}$ & 0.10 & 0.752 \\
+s(total\_rooms, df = 4) & 1 & $5.97 \times 10^{11}$ & $5.97 \times 10^{11}$ & 29.04 & $7.17 \times 10^{-8}$ *** \\
+sqft\_diff\_15 & 1 & $5.42 \times 10^{11}$ & $5.42 \times 10^{11}$ & 26.33 & $2.90 \times 10^{-7}$ *** \\
+\hline
+Residuals & 21299 & $4.38 \times 10^{14}$ & $2.06 \times 10^{10}$ & & \\
+\hline
+\end{tabular}
+\caption{GAM: ANOVA for Parametric Effects}
+\label{tab:gamanova}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{|l|r|r|l|}
+\hline
+\textbf{Variable} & \textbf{Npar Df} & \textbf{Npar F} & \textbf{P($>$F)} \\
+\hline
+s(bathrooms, df = 4) & 3 & 22.99 & $7.44 \times 10^{-15}$ *** \\
+s(sqft\_living, df = 4) & 3 & 76.91 & $< 2.2 \times 10^{-16}$ *** \\
+s(sqft\_lot, df = 4) & 3 & 21.60 & $5.84 \times 10^{-14}$ *** \\
+s(floors, df = 4) & 3 & 24.35 & $9.99 \times 10^{-16}$ *** \\
+s(sqft\_basement, df = 4) & 3 & 70.34 & $< 2.2 \times 10^{-16}$ *** \\
+s(lat, df = 4) & 3 & 51.48 & $< 2.2 \times 10^{-16}$ *** \\
+s(long, df = 4) & 3 & 15.16 & $7.52 \times 10^{-10}$ *** \\
+s(sqft\_lot15, df = 4) & 3 & 14.56 & $1.82 \times 10^{-9}$ *** \\
+s(age, df = 4) & 3 & 61.05 & $< 2.2 \times 10^{-16}$ *** \\
+s(total\_sqft, df = 4) & 3 & 333.48 & $< 2.2 \times 10^{-16}$ *** \\
+s(total\_rooms, df = 4) & 3 & 24.54 & $7.77 \times 10^{-16}$ *** \\
+\hline
+\end{tabular}
+\caption{GAM: ANOVA for Nonparametric Effects}
+\label{tab:gamanovanonparametric}
+\end{table}
+
 
 \begin{figure}[H]
 \includegraphics[scale=0.65]{NN}
@@ -316,45 +443,17 @@ Age           & . \\
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.65]{traintestloss}
-\centering
-\caption{Neural Network training}
-\label{fig:traintestloss}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics[scale=0.5]{gglasso1pred}
-\centering
-\caption{Group set 1 actual vs predicted}
-\label{fig:gglasso1pred}
-\end{figure}
-
-\begin{figure}[H]
-\includegraphics[scale=0.5]{gglasso2pred}
-\centering
-\caption{Group set 2 actual vs predicted}
-\label{fig:gglasso2pred}
-\end{figure}
-
-\begin{table}[ht]
-\centering
-\begin{tabular}{|c|c|c|c|}
-\hline
-\textbf{Model} & \textbf{MSE} & \textbf{R\(^2\)} & \textbf{MAE} \\
-\hline
-Model 1 & 13572908807 & -11.50303 & 48891.6 \\
-Model 2 & 11156390644 & -9.27699 & 43118.46 \\
-\hline
-\end{tabular}
-\caption{Group Lasso evaluation metrics}
-\label{tab:nn}
-\end{table}
-
-\begin{figure}[H]
-\includegraphics[scale=0.65]{NNpred}
+\includegraphics[scale=0.7]{NNpred}
 \centering
 \caption{Neural Network actual vs predicted}
 \label{fig:NNpred}
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=0.75]{traintestloss}
+\centering
+\caption{Neural Network training}
+\label{fig:traintestloss}
 \end{figure}
 
 
