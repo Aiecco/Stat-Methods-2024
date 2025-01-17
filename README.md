@@ -1,5 +1,31 @@
-# Stat-Methods-2024
+# Application of High-Dimensional Techniques to House Price Prediction
 
+This study investigates various statistical and machine learning methods to predict house prices using a dataset of real estate properties characterized by physical, locational, and quality attributes. The focus is on understanding the predictive power of different models and assessing the relationship between house features and their market value.
+Dataset and Preprocessing
+
+The dataset includes attributes like the number of bedrooms and bathrooms, lot size, scenic features, and locational data such as latitude, longitude, and average neighborhood characteristics. Preprocessing involved cleaning data, handling missing values, creating derived features (e.g., total area, bathroom-to-bedroom ratio), and scaling numerical variables. Features were grouped either based on real-estate domain expertise or statistical correlations to facilitate advanced modeling techniques like Group Lasso.
+Models Explored
+
+    Multivariate Linear Regression: A baseline model that explained ~69% of the variance in house prices. Significant predictors included living area, grade, and waterfront view. While the model performed well, some moderate-scale variability in predictions suggested room for improvement.
+
+    Elastic Net Regularized Poisson Regression: Elastic Net was applied to handle multicollinearity and enforce sparsity. Although this approach enabled variable selection, its performance was slightly inferior to linear regression, explaining ~67.5% of the variance, possibly due to the linear nature of the relationships in the data.
+
+    Group Lasso: Designed to select or discard entire groups of related variables, this method performed similarly to linear regression (~60% variance explained). Real-estate-based grouping emphasized physical characteristics, while statistically correlated grouping highlighted quality measures like grade and waterfront. No groups were entirely excluded, indicating their collective importance.
+
+    Deep Neural Network: A medium-depth neural network demonstrated that the dataset's features could effectively predict house prices, achieving an adjusted R2R2 of ~78%. This experiment confirmed the dataset's integrity and the feasibility of achieving accurate predictions with non-linear models.
+
+    Generalized Additive Model (GAM): GAM emerged as the best-performing model, explaining ~85% of the variance. It captured both linear and non-linear relationships by modeling predictors as smooth, flexible functions. This result highlights the complex interplay between house features and prices, justifying GAM's capability to address both linearity and non-linearity in the data.
+
+Key Points
+
+    1 House prices are influenced by both linear and polynomial relationships with features like living area, grade, and location.
+    2 GAM's ability to model non-linear effects made it the most effective approach for this dataset.
+    3 Despite advanced regularization techniques like Elastic Net and Group Lasso, simpler models like linear regression provided better performance.
+    4 The neural network validated the dataset's reliability and offered a benchmark for achievable accuracy.
+
+
+
+---------------------------------
 # Dataset
         https://www.kaggle.com/datasets/sukhmandeepsinghbrar/housing-price-dataset/data
 
