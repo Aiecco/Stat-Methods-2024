@@ -1,5 +1,25 @@
 # Application of High-Dimensional Techniques to House Price Prediction
 
+
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0001](https://github.com/user-attachments/assets/7d5d7bcf-05dc-4a44-b944-8765c002a442)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0002](https://github.com/user-attachments/assets/7a035690-a683-4527-b807-bd4f07116c57)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0003](https://github.com/user-attachments/assets/f54f4204-bcfc-4ba7-bc9d-651da25dbb18)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0004](https://github.com/user-attachments/assets/03d190f4-189d-441e-b034-4b3dfa098735)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0005](https://github.com/user-attachments/assets/9f014c26-03c8-4ad4-94f0-3adb89553d5c)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0006](https://github.com/user-attachments/assets/35adfb2e-6802-4dac-9db0-998208e002b3)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0007](https://github.com/user-attachments/assets/7230ce86-0e9e-4de8-a9da-815e2b3d875e)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0008](https://github.com/user-attachments/assets/910a19c0-e4b4-42c1-ba20-f563c7921469)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0009](https://github.com/user-attachments/assets/b9e71c8a-899b-4a02-8026-9e0a2a701872)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0010](https://github.com/user-attachments/assets/b22d0b4c-1622-412c-aa49-5af2cdb3736b)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0011](https://github.com/user-attachments/assets/1c6655f2-48e3-47cd-9145-a05fdb22c076)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0012](https://github.com/user-attachments/assets/271da1d3-50f9-4c65-9ad6-e3db68b7fa27)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0013](https://github.com/user-attachments/assets/da937021-6f3a-4637-92a5-0a600c1b55a4)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0014](https://github.com/user-attachments/assets/245da85c-2164-47bf-a9e7-832431ded06e)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0015](https://github.com/user-attachments/assets/14047e13-af8f-41ab-b6f7-078b095d9deb)
+![Application of High Dimensional Techniques to House Price Prediction_pages-to-jpg-0016](https://github.com/user-attachments/assets/fcc1e7ab-5196-4e7c-8521-43194848d2c0)
+
+
+
 This study investigates various statistical and machine learning methods to predict house prices using a dataset of real estate properties characterized by physical, locational, and quality attributes. The focus is on understanding the predictive power of different models and assessing the relationship between house features and their market value.
 Dataset and Preprocessing
 
